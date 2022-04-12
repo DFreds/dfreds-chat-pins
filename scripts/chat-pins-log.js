@@ -21,13 +21,6 @@ export default class ChatPinsLog extends Application {
     super(options);
 
     /**
-     * Track the time when the last message was sent to avoid flooding notifications
-     * @type {number}
-     * @private
-     */
-    this._lastMessageTime = 0;
-
-    /**
      * Track the id of the last message displayed in the log
      * @type {string|null}
      * @private
@@ -42,27 +35,24 @@ export default class ChatPinsLog extends Application {
     this._lastWhisper = null;
 
     // Update timestamps every 15 seconds
-    setInterval(this.updateTimestamps.bind(this), 1000 * 15);
+    setInterval(this._updateTimestamps.bind(this), 1000 * 15);
 
     this._chatPins = new ChatPins();
   }
 
   /**
-   * A reference to the Messages collection that the chat log displays
+   * A reference to the pinned Messages collection that the chat log displays
    * @type {Messages}
    */
   get collection() {
     return game.messages.filter((message) => this._chatPins.isPinned(message));
   }
 
-  /** @inheritdoc */
   async _render(force, options) {
     if (this.rendered) return; // Never re-render the Chat Log itself, only it's contents
     await super._render(force, options);
-    this.scrollBottom();
+    this._scrollBottom();
   }
-
-  /* -------------------------------------------- */
 
   /** @inheritdoc */
   async _renderInner(data) {
@@ -71,15 +61,6 @@ export default class ChatPinsLog extends Application {
     return html;
   }
 
-  /* -------------------------------------------- */
-
-  /**
-   * Render a batch of additional messages, prepending them to the top of the log
-   * @param {jQuery} html     The rendered jQuery HTML object
-   * @param {number} size     The batch size to include
-   * @return {Promise<void>}
-   * @private
-   */
   async _renderBatch(html, size) {
     const messages = this.collection;
     const log = html.find('#chat-pins-log');
@@ -112,41 +93,103 @@ export default class ChatPinsLog extends Application {
   }
 
   /**
-   * Trigger a notification that alerts the user visually and audibly that a new chat log message has been posted
+   * Delete a single message from the chat log
+   * @param {string} messageId    The ChatMessage document to remove from the log
+   * @param {boolean} [deleteAll] Is this part of a flush operation to delete all messages?
    */
-  notify(message) {
-    this._lastMessageTime = Date.now();
-    if (!this.rendered) return;
+  deleteMessage(messageId, { deleteAll = false } = {}) {
+    // Get the chat message being removed from the log
+    const message = game.messages.get(messageId, { strict: false });
+    if (message) message.logged = false;
 
-    // Display the chat notification icon and remove it 3 seconds later
-    let icon = $('#chat-notification');
-    if (icon.is(':hidden')) icon.fadeIn(100);
-    setTimeout(() => {
-      if (Date.now() - this._lastMessageTime > 3000 && icon.is(':visible'))
-        icon.fadeOut(100);
-    }, 3001);
+    // Get the current HTML element for the message
+    let li = this.element.find(`.message[data-message-id="${messageId}"]`);
+    if (!li.length) return;
 
-    // Play a notification sound effect
-    if (message.data.sound) AudioHelper.play({ src: message.data.sound });
+    // Update the last index
+    if (deleteAll) {
+      this._lastId = null;
+    } else if (messageId === this._lastId) {
+      const next = li[0].nextElementSibling;
+      this._lastId = !!next ? next.dataset['messageId'] : null;
+    }
+
+    // Remove the deleted message
+    li.slideUp(100, () => li.remove());
   }
 
   /**
-   * Scroll the chat log to the bottom
-   * @param {object} options
-   * @param {boolean} options.popout If a popout exists, scroll it too
-   * @private
+   * Post a single chat message to the log
+   * @param {ChatMessage} message   A ChatMessage document instance to post to the log
+   * @param {boolean} [notify]      Trigger a notification which shows the log as having a new unread message
+   * @param {object} [options={}]   Additional options for how the message is posted to the log
+   * @param {string} [options.before] An existing message ID to append the message before, by default the new message is
+   *                                  appended to the end of the log.
+   * @return {Promise<void>}        A Promise which resolves once the message is posted
    */
-  scrollBottom() {
+  async postOne(message, notify = false, { before } = {}) {
+    if (!message.visible) return;
+    message.logged = true;
+
+    // Track internal flags
+    if (!this._lastId) this._lastId = message.id; // Ensure that new messages don't result in batched scrolling
+    if (
+      (message.data.whisper || []).includes(game.user.id) &&
+      !message.isRoll
+    ) {
+      this._lastWhisper = message;
+    }
+
+    // Render the message to the log
+    const html = await message.getHTML();
+    const log = this.element.find('#chat-pins-log');
+
+    // Append the message after some other one
+    const existing = before
+      ? this.element.find(`.message[data-message-id="${before}"]`)
+      : [];
+    if (existing.length) existing.before(html);
+    // Otherwise, append the message to the bottom of the log
+    else {
+      log.append(html);
+      this._scrollBottom();
+    }
+  }
+
+  _scrollBottom() {
     const el = this.element;
     const log = el.length ? el[0].querySelector('#chat-pins-log') : null;
     if (log) log.scrollTop = log.scrollHeight;
   }
 
   /**
-   * Update the displayed timestamps for every displayed message in the chat log.
-   * Timestamps are displayed in a humanized "timesince" format.
+   * Update the content of a previously posted message after its data has been replaced
+   * @param {ChatMessage} message   The ChatMessage instance to update
+   * @param {boolean} notify        Trigger a notification which shows the log as having a new unread message
    */
-  updateTimestamps() {
+  async updateMessage(message, notify = false) {
+    let li = this.element.find(`.message[data-message-id="${message.id}"]`);
+    if (li.length) {
+      const html = await message.getHTML();
+      li.replaceWith(html);
+    }
+
+    // Add a newly visible message to the log
+    else {
+      const messages = game.messages.contents;
+      const messageIndex = messages.findIndex((m) => m === message);
+      let nextMessage;
+      for (let i = messageIndex + 1; i < messages.length; i++) {
+        if (messages[i].visible) {
+          nextMessage = messages[i];
+          break;
+        }
+      }
+      await this.postOne(message, false, { before: nextMessage?.id });
+    }
+  }
+
+  _updateTimestamps() {
     const messages = this.element.find('#chat-pins-log .message');
     for (let li of messages) {
       const message = game.messages.get(li.dataset['messageId']);
@@ -155,10 +198,6 @@ export default class ChatPinsLog extends Application {
       stamp.textContent = foundry.utils.timeSince(message.data.timestamp);
     }
   }
-
-  /* -------------------------------------------- */
-  /*  Event Listeners and Handlers
-  /* -------------------------------------------- */
 
   /** @inheritdoc */
   activateListeners(html) {

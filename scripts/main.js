@@ -3,6 +3,7 @@ import { libWrapper } from './lib/shim.js';
 import Constants from './constants.js';
 import Settings from './settings.js';
 import ChatPins from './chat-pins.js';
+import FoundryHelpers from './foundry-helpers.js';
 
 /**
  * Initializes the handlebar helpers
@@ -32,8 +33,6 @@ Hooks.once('ready', () => {
   );
 });
 
-// TODO add pin button in top right of message?
-
 /**
  * Handle adding pin button to chat buttons
  */
@@ -60,6 +59,35 @@ Hooks.on('renderChatMessage', (message, $html, _data) => {
   } else {
     $html.css('border', '');
   }
+});
+
+/**
+ * Handle updating the chat pins log if open
+ */
+Hooks.on('updateChatMessage', (message, update, data) => {
+  const chatPins = new ChatPins();
+  const foundryHelpers = new FoundryHelpers();
+  const app = foundryHelpers.findChatPinsLogApp();
+
+  if (!app) return;
+
+  if (!message.visible || !chatPins.isPinned(message)) {
+    app.deleteMessage(message.id);
+  } else {
+    app.updateMessage(message);
+  }
+});
+
+/**
+ * Handle updating the chat pins log if open
+ */
+Hooks.on('deleteChatMessage', (message, data, userId) => {
+  const foundryHelpers = new FoundryHelpers();
+  const app = foundryHelpers.findChatPinsLogApp();
+
+  if (!app) return;
+
+  app.deleteMessage(message.id);
 });
 
 /**
