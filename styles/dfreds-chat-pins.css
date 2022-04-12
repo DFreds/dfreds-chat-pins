@@ -1,0 +1,9 @@
+#chat-pins-log {
+  flex: 1;
+  height: calc(100% - 130px);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  list-style: none;
+}

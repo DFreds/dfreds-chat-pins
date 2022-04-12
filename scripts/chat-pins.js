@@ -1,6 +1,5 @@
-import ChatPinsApp from './app/chat-pins-app.js';
+import ChatPinsLog from './chat-pins-log.js';
 import Constants from './constants.js';
-import Settings from './settings.js';
 
 /**
  * Handles all logic around pinning chat messages
@@ -8,30 +7,16 @@ import Settings from './settings.js';
 export default class ChatPins {
   static FLAG = 'pinned';
 
-  constructor() {
-    this._settings = new Settings();
-  }
-
   addPinButton($chatHtml) {
     const pinButton = $(
       '<a class="chat-pins" title=""><i class="fas fa-thumbtack"></i></a>'
     );
-    // TODO open just pins
-    // pinButton.click(() => {
-    //   new ChatPinsApp().render(true);
-    // });
+    pinButton.click(async () => {
+      new ChatPinsLog().render(true);
+    });
     const controlButtons = $chatHtml.find('#chat-controls .control-buttons');
     controlButtons.css('flex', '0 0 72px');
     controlButtons.prepend(pinButton);
-  }
-
-  /**
-   * Check if a user is allowed to pin or unpin a message
-   *
-   * @returns {boolean} true if the user is has permission to manipulate pins
-   */
-  canPin() {
-    return game.user.role >= this._settings.pinPermission;
   }
 
   /**
@@ -48,18 +33,20 @@ export default class ChatPins {
    * Pins the given message
    *
    * @param {ChatMessage} message - the message to pin
+   * @returns {Promise} promise that resolves when the message flag is set
    */
   pin(message) {
-    message.setFlag(Constants.MODULE_ID, ChatPins.FLAG, game.user.id);
+    return message.setFlag(Constants.MODULE_ID, ChatPins.FLAG, game.user.id);
   }
 
   /**
    * Unpins the given message
    *
    * @param {ChatMessage} message - the message to unpin
+   * @returns {Promise} promise that resolves when the message flag is unset
    */
   unpin(message) {
-    message.unsetFlag(Constants.MODULE_ID, ChatPins.FLAG);
+    return message.unsetFlag(Constants.MODULE_ID, ChatPins.FLAG);
   }
 
   /**

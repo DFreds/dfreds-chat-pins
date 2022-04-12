@@ -18,6 +18,9 @@ Hooks.once('init', () => {
  * Handle setting up the app and lib wrapper overrides
  */
 Hooks.once('ready', () => {
+  /**
+   * Overrides the standard flush so that pinned messages are not deleted
+   */
   libWrapper.register(
     Constants.MODULE_ID,
     'Messages.prototype.flush',
@@ -31,12 +34,17 @@ Hooks.once('ready', () => {
 
 // TODO add pin button in top right of message?
 
+/**
+ * Handle adding pin button to chat buttons
+ */
 Hooks.on('renderChatLog', (_chatLogApp, $html, _data) => {
   const chatPins = new ChatPins();
   chatPins.addPinButton($html);
-  // TODO on click, open chat log app with only pins
 });
 
+/**
+ * Handle modifying chat message when rendered to indicate pin status
+ */
 Hooks.on('renderChatMessage', (message, $html, _data) => {
   const chatPins = new ChatPins();
 
@@ -54,6 +62,9 @@ Hooks.on('renderChatMessage', (message, $html, _data) => {
   }
 });
 
+/**
+ * Add new context menu operations to the chat log entries
+ */
 Hooks.on('getChatLogEntryContext', (_chatLogApp, entries) => {
   const chatPins = new ChatPins();
 
@@ -63,11 +74,11 @@ Hooks.on('getChatLogEntryContext', (_chatLogApp, entries) => {
       icon: '<i class="fas fa-thumbtack"></i>',
       condition: (li) => {
         const message = game.messages.get(li.data('messageId'));
-        return chatPins.canPin() && !chatPins.isPinned(message);
+        return game.user.isGM && !chatPins.isPinned(message);
       },
-      callback: (li) => {
+      callback: async (li) => {
         const message = game.messages.get(li.data('messageId'));
-        chatPins.pin(message);
+        await chatPins.pin(message);
       },
     },
     {
@@ -75,11 +86,11 @@ Hooks.on('getChatLogEntryContext', (_chatLogApp, entries) => {
       icon: '<i class="fas fa-thumbtack"></i>',
       condition: (li) => {
         const message = game.messages.get(li.data('messageId'));
-        return chatPins.canPin() && chatPins.isPinned(message);
+        return game.user.isGM && chatPins.isPinned(message);
       },
-      callback: (li) => {
+      callback: async (li) => {
         const message = game.messages.get(li.data('messageId'));
-        chatPins.unpin(message);
+        await chatPins.unpin(message);
       },
     }
   );
