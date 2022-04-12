@@ -41,7 +41,7 @@ export default class ChatPins {
    * @returns {boolean} true if the message is pinned
    */
   isPinned(message) {
-    return message.getFlag(Constants.MODULE_ID, ChatPins.FLAG);
+    return message.getFlag(Constants.MODULE_ID, ChatPins.FLAG) !== undefined;
   }
 
   /**
@@ -50,7 +50,7 @@ export default class ChatPins {
    * @param {ChatMessage} message - the message to pin
    */
   pin(message) {
-    message.setFlag(Constants.MODULE_ID, ChatPins.FLAG, game.user.name);
+    message.setFlag(Constants.MODULE_ID, ChatPins.FLAG, game.user.id);
   }
 
   /**
@@ -60,6 +60,17 @@ export default class ChatPins {
    */
   unpin(message) {
     message.unsetFlag(Constants.MODULE_ID, ChatPins.FLAG);
+  }
+
+  /**
+   * Get the user who pinned the message
+   *
+   * @param {ChatMessage} message - the message to get the pinner of
+   * @returns {string} the name of the user who pinned the message
+   */
+  pinner(message) {
+    const pinnerId = message.getFlag(Constants.MODULE_ID, ChatPins.FLAG);
+    return game.users.get(pinnerId).name;
   }
 
   // TODO do your own i18n

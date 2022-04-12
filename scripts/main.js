@@ -37,11 +37,18 @@ Hooks.on('renderChatLog', (_chatLogApp, $html, _data) => {
   // TODO on click, open chat log app with only pins
 });
 
-Hooks.on('renderChatMessage', (message, $html, data) => {
+Hooks.on('renderChatMessage', (message, $html, _data) => {
   const chatPins = new ChatPins();
 
   if (chatPins.isPinned(message)) {
     $html.css('border', '2px solid #ff6400');
+    $html
+      .find('.message-header .message-sender')
+      .append(
+        `<h4 style="font-size: 12px;">Pinned by ${chatPins.pinner(
+          message
+        )}</h4>`
+      );
   } else {
     $html.css('border', '');
   }
@@ -67,7 +74,6 @@ Hooks.on('getChatLogEntryContext', (_chatLogApp, entries) => {
       name: 'Unpin Message',
       icon: '<i class="fas fa-thumbtack"></i>',
       condition: (li) => {
-        // TODO check setting permission
         const message = game.messages.get(li.data('messageId'));
         return chatPins.canPin() && chatPins.isPinned(message);
       },
