@@ -14,8 +14,18 @@ export default class ChatPins {
     pinButton.click(async () => {
       new ChatPinsLog().render(true);
     });
+    let flex = '0 0 72px';
+
+    if (game.user.role < CONST.USER_ROLES.ASSISTANT) {
+      const chatControls = $chatHtml.find('#chat-controls');
+      chatControls.append(
+        `<div class="control-buttons" style="flex: 0 0 24px;"></div>`
+      );
+      flex = '0 0 24px';
+    }
+
     const controlButtons = $chatHtml.find('#chat-controls .control-buttons');
-    controlButtons.css('flex', '0 0 72px');
+    controlButtons.css('flex', flex);
     controlButtons.prepend(pinButton);
   }
 
