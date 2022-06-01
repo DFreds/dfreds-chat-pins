@@ -9,7 +9,7 @@ export default class ChatPins {
 
   addPinButton($chatHtml) {
     const pinButton = $(
-      '<a class="chat-pins" title=""><i class="fas fa-thumbtack"></i></a>'
+      '<a class="chat-pins" title="Chat Pins"><i class="fas fa-thumbtack"></i></a>'
     );
     pinButton.click(async () => {
       new ChatPinsLog().render(true);
