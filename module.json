@@ -1,5 +1,5 @@
 {
-  "name": "dfreds-chat-pins",
+  "id": "dfreds-chat-pins",
   "title": "DFreds Chat Pins",
   "description": "A FoundryVTT module that allows pinning messages to the chat.",
   "author": "DFreds",
@@ -17,8 +17,11 @@
   "changelog": "https://github.com/DFreds/dfreds-chat-pins/releases",
   "flags": {},
   "version": "1.0.0",
-  "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "9",
+  "compatibility": {
+    "minimum": 10,
+    "verified": "10.284",
+    "maximum": 10
+  },
   "scripts": [],
   "esmodules": ["./scripts/main.js"],
   "styles": ["./styles/dfreds-chat-pins.css"],

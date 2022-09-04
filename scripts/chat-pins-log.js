@@ -133,10 +133,7 @@ export default class ChatPinsLog extends Application {
 
     // Track internal flags
     if (!this._lastId) this._lastId = message.id; // Ensure that new messages don't result in batched scrolling
-    if (
-      (message.data.whisper || []).includes(game.user.id) &&
-      !message.isRoll
-    ) {
+    if ((message.whisper || []).includes(game.user.id) && !message.isRoll) {
       this._lastWhisper = message;
     }
 
@@ -193,9 +190,9 @@ export default class ChatPinsLog extends Application {
     const messages = this.element.find('#chat-pins-log .message');
     for (let li of messages) {
       const message = game.messages.get(li.dataset['messageId']);
-      if (!message?.data.timestamp) return;
+      if (!message?.timestamp) return;
       const stamp = li.querySelector('.message-timestamp');
-      stamp.textContent = foundry.utils.timeSince(message.data.timestamp);
+      stamp.textContent = foundry.utils.timeSince(message.timestamp);
     }
   }
 
