@@ -33,8 +33,10 @@
     }
   ],
   "packs": [],
-  "system": [],
-  "dependencies": [],
+  "relationships": {
+    "systems": [],
+    "requires": []
+  },
   "socket": false,
   "manifest": "https://github.com/DFreds/dfreds-chat-pins/releases/latest/download/module.json",
   "download": "https://github.com/DFreds/dfreds-chat-pins/releases/download/v1.0.0/dfreds-chat-pins.zip",
