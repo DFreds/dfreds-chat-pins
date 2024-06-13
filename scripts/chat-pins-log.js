@@ -13,7 +13,7 @@ export default class ChatPinsLog extends Application {
       left: 1300,
       minimizable: true,
       resizable: true,
-      scrollY: ['#chat-pins-log'],
+      scrollY: ['#chat-log'],
     });
   }
 
@@ -51,7 +51,7 @@ export default class ChatPinsLog extends Application {
   async _render(force, options) {
     if (this.rendered) return; // Never re-render the Chat Log itself, only it's contents
     await super._render(force, options);
-    this._scrollBottom();
+    return this._scrollBottom();
   }
 
   /** @inheritdoc */
@@ -63,7 +63,7 @@ export default class ChatPinsLog extends Application {
 
   async _renderBatch(html, size) {
     const messages = this.collection;
-    const log = html.find('#chat-pins-log');
+    const log = html.find('#chat-log');
 
     // Get the index of the last rendered message
     let lastIdx = messages.findIndex((m) => m.id === this._lastId);
@@ -139,7 +139,7 @@ export default class ChatPinsLog extends Application {
 
     // Render the message to the log
     const html = await message.getHTML();
-    const log = this.element.find('#chat-pins-log');
+    const log = this.element.find('#chat-log');
 
     // Append the message after some other one
     const existing = before
@@ -155,7 +155,7 @@ export default class ChatPinsLog extends Application {
 
   _scrollBottom() {
     const el = this.element;
-    const log = el.length ? el[0].querySelector('#chat-pins-log') : null;
+    const log = el.length ? el[0].querySelector('#chat-log') : null;
     if (log) log.scrollTop = log.scrollHeight;
   }
 
@@ -187,7 +187,7 @@ export default class ChatPinsLog extends Application {
   }
 
   _updateTimestamps() {
-    const messages = this.element.find('#chat-pins-log .message');
+    const messages = this.element.find('#chat-log .message');
     for (let li of messages) {
       const message = game.messages.get(li.dataset['messageId']);
       if (!message?.timestamp) return;
@@ -199,7 +199,7 @@ export default class ChatPinsLog extends Application {
   /** @inheritdoc */
   activateListeners(html) {
     // Load new messages on scroll
-    html.find('#chat-pins-log').scroll(this._onScrollLog.bind(this));
+    html.find('#chat-log').scroll(this._onScrollLog.bind(this));
 
     // Single Message Delete
     html.on('click', 'a.message-delete', this._onDeleteMessage.bind(this));
