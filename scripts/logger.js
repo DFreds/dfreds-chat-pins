@@ -4,9 +4,9 @@
  * @param {*} data - Data to log
  */
 export default function (data) {
-  if (typeof data === 'string') {
-    console.log(`dfreds-chat-pins | ${data}`);
-  } else {
-    console.log(data);
-  }
+    if (typeof data === "string") {
+        console.log(`dfreds-chat-pins | ${data}`);
+    } else {
+        console.log(data);
+    }
 }

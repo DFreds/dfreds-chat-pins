@@ -1,0 +1,44 @@
+{
+    "id": "dfreds-chat-pins",
+    "title": "DFreds Chat Pins",
+    "description": "A FoundryVTT module that allows pinning messages to the chat.",
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": 12,
+        "verified": "12.327",
+        "maximum": 12
+    },
+    "esmodules": ["vendor.mjs", "dfreds-chat-pins.mjs"],
+    "scripts": [],
+    "styles": ["styles/dfreds-chat-pins.css"],
+    "packs": [],
+    "packFolders": [],
+    "relationships": {
+        "systems": [],
+        "requires": []
+    },
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "authors": [
+        {
+            "name": "DFreds",
+            "url": "https://github.com/DFreds",
+            "discord": "DFreds#1238"
+        }
+    ],
+    "socket": false,
+    "url": "https://github.com/DFreds/dfreds-chat-pins",
+    "manifest": "https://github.com/DFreds/dfreds-chat-pins/releases/latest/download/module.json",
+    "download": "https://github.com/DFreds/dfreds-chat-pins/releases/download/v1.0.0/dfreds-chat-pins.zip",
+    "license": "https://github.com/DFreds/dfreds-chat-pins/blob/main/LICENSE",
+    "readme": "https://github.com/DFreds/dfreds-chat-pins/blob/main/README.md",
+    "bugs": "https://github.com/DFreds/dfreds-chat-pins/issues",
+    "changelog": "https://github.com/DFreds/dfreds-chat-pins/releases",
+    "library": false,
+    "media": []
+}
