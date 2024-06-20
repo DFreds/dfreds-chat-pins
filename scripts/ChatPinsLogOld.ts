@@ -1,4 +1,4 @@
-import { ChatPins } from "./chat-pins.ts";
+import { ChatPins } from "../src/ts/chat-pins.ts";
 
 // OLD WAY
 class ChatPinsLogOld extends Application {
