@@ -48,7 +48,7 @@ class ChatPinsLog extends Application {
 
     static override get defaultOptions(): ApplicationOptions {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            id: "chat",
+            id: "chat-pins",
             template: "modules/dfreds-chat-pins/templates/chat-pins-app.html",
             title: "Chat Pins Log",
             popOut: true,
