@@ -21,9 +21,7 @@
     },
     "author": "DFreds (https://github.com/DFreds)",
     "license": "MIT",
-    "dependencies": {
-        "uuid": "^9.0.1"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@types/fs-extra": "^11.0.4",
         "@types/jquery": "^3.5.29",

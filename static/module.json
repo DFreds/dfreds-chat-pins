@@ -8,7 +8,7 @@
         "verified": "12.327",
         "maximum": 12
     },
-    "esmodules": ["vendor.mjs", "dfreds-chat-pins.mjs"],
+    "esmodules": ["dfreds-chat-pins.mjs"],
     "scripts": [],
     "styles": ["styles/dfreds-chat-pins.css"],
     "packs": [],

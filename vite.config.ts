@@ -45,12 +45,11 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             "./dfreds-chat-pins.mjs",
             `/** ${message} */\n\nwindow.global = window;\nimport "./src/ts/module.ts";\n`,
         );
-        fs.writeFileSync("./vendor.mjs", `/** ${message} */\n`);
+        // fs.writeFileSync("./vendor.mjs", `/** ${message} */\n`);
     }
 
     return {
-        base:
-            command === "build" ? "./" : `/modules/dfreds-chat-pins/`,
+        base: command === "build" ? "./" : `/modules/dfreds-chat-pins/`,
         publicDir: "static",
         define: {},
         esbuild: { keepNames: true },
@@ -73,12 +72,12 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                             : name ?? "",
                     chunkFileNames: "[name].mjs",
                     entryFileNames: "dfreds-chat-pins.mjs",
-                    manualChunks: {
-                        vendor:
-                            buildMode === "production"
-                                ? Object.keys(packageJSON.dependencies)
-                                : [],
-                    },
+                    // manualChunks: {
+                    //     vendor:
+                    //         buildMode === "production"
+                    //             ? Object.keys(packageJSON.dependencies)
+                    //             : [],
+                    // },
                 },
             },
             target: "es2022",
@@ -99,8 +98,7 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
             port: 30001,
             open: false,
             proxy: {
-                "^(?!/modules/dfreds-chat-pins/)":
-                    "http://localhost:30000/",
+                "^(?!/modules/dfreds-chat-pins/)": "http://localhost:30000/",
                 "/socket.io": {
                     target: "ws://localhost:30000",
                     ws: true,
@@ -141,10 +139,7 @@ function deleteLockFilePlugin(): Vite.Plugin {
         },
         writeBundle(outputOptions) {
             const outDir = outputOptions.dir ?? "";
-            const lockFile = path.resolve(
-                outDir,
-                "dfreds-chat-pins.lock",
-            );
+            const lockFile = path.resolve(outDir, "dfreds-chat-pins.lock");
             fs.rmSync(lockFile);
         },
     };
