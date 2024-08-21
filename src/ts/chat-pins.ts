@@ -11,7 +11,7 @@ class ChatPins {
      */
     addPinButton(chatHtml: JQuery<HTMLElement>): void {
         const pinButton = $(
-            '<a class="chat-pins" title="Chat Pins"><i class="fas fa-thumbtack"></i></a>',
+            `<a class="chat-pins" title="${game.i18n.localize("ChatPins.ChatPins")}"><i class="fas fa-thumbtack"></i></a>`,
         );
         pinButton.click(async () => {
             new ChatPinsLog().render(true);
@@ -67,9 +67,12 @@ class ChatPins {
      * @param message - the message to get the pinner of
      * @returns the name of the user who pinned the message
      */
-    pinner(message: ChatMessage): string | undefined {
+    pinner(message: ChatMessage): string {
         const pinnerId = message.getFlag(MODULE_ID, this.#FLAG) as string;
-        return game.users.get(pinnerId)?.name;
+        return (
+            game.users.get(pinnerId)?.name ??
+            game.i18n.localize("ChatPins.Unknown")
+        );
     }
 
     // TODO do your own i18n
@@ -84,11 +87,10 @@ class ChatPins {
         // @ts-expect-error It wants a bunch of "Required" params in the options, but you don't actually need them
         return Dialog.confirm({
             title: game.i18n.localize("CHAT.FlushTitle"),
-            content: `<h4>${game.i18n.localize(
-                "AreYouSure",
-            )}</h4><p>${game.i18n.localize(
-                "CHAT.FlushWarning",
-            )}</p><p>Note that this will not delete any pinned messages.</p>`,
+            content: `
+            <h4>${game.i18n.localize("AreYouSure")}</h4>
+            <p>${game.i18n.localize("CHAT.FlushWarning")}</p>
+            <p>${game.i18n.localize("ChatPins.DeleteAllNote")}</p>`,
             yes: async () => {
                 const notPinnedIds = game.messages
                     .filter(

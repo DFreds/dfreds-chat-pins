@@ -37,14 +37,14 @@ Hooks.on("renderChatMessage", (message, $html, _data) => {
     const chatPins = new ChatPins();
 
     if (chatPins.isPinned(message)) {
+        const pinnedBy = game.i18n.format("ChatPins.PinnedBy", {
+            pinner: chatPins.pinner(message),
+        });
+        const pinnedByHtml = $(`<p>${pinnedBy}</p>`);
+
         $html.css("border", "2px solid #ff6400");
-        $html
-            .find(".message-header .message-sender")
-            .append(
-                `<h4 style="font-size: 12px;">Pinned by ${chatPins.pinner(
-                    message,
-                )}</h4>`,
-            );
+        const messageHeader = $html.find(".message-header");
+        pinnedByHtml.insertAfter(messageHeader);
     } else {
         $html.css("border", "");
     }
@@ -87,7 +87,7 @@ Hooks.on("getChatLogEntryContext", (_chatLogApp, entries) => {
 
     entries.unshift(
         {
-            name: "Pin Message",
+            name: "ChatPins.PinMessage",
             icon: '<i class="fas fa-thumbtack"></i>',
             condition: (li) => {
                 const messageId = li.data("messageId");
@@ -109,7 +109,7 @@ Hooks.on("getChatLogEntryContext", (_chatLogApp, entries) => {
             },
         },
         {
-            name: "Unpin Message",
+            name: "ChatPins.UnpinMessage",
             icon: '<i class="fas fa-thumbtack"></i>',
             condition: (li) => {
                 const messageId = li.data("messageId");
