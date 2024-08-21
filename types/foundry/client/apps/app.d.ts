@@ -298,21 +298,11 @@ declare global {
          */
         maximize(): Promise<boolean>;
 
-        /**
-         * Bring the application to the top of the rendering stack
-         */
+        /** Bring the application to the top of the rendering stack */
         bringToTop(): void;
 
-        /**
-         * Set the application position and store it's new location
-         */
-        setPosition({
-            left,
-            top,
-            width,
-            height,
-            scale,
-        }?: ApplicationPosition): ApplicationPosition | undefined;
+        /** Set the application position and store it's new location */
+        setPosition(options?: ApplicationPosition): ApplicationPosition | void;
 
         /**
          * Handle application minimization behavior - collapsing content and reducing the size of the header
@@ -323,8 +313,6 @@ declare global {
          * Additional actions to take when the application window is resized
          */
         protected _onResize(event: Event | JQuery.Event): void;
-
-        protected _waitForImages(): Promise<void>;
     }
 
     interface ApplicationOptions {
@@ -411,7 +399,7 @@ declare global {
         /** A context-providing string which suggests what event triggered the render */
         renderContext?: string;
         /** The data change which motivated the render request */
-        renderData?: Record<string, unknown>;
+        renderData?: Record<string, unknown>[];
         // Undocumented
         action?: UserAction;
         // Undocumented: applicable only to `FormApplication`s
