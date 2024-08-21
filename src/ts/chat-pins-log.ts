@@ -76,7 +76,7 @@ class ChatPinsLog extends Application {
                     type: message.type,
                     system: message.system,
                     style: message.style,
-                    author: message.author.id,
+                    author: message?.author?.id,
                     timestamp: message.timestamp,
                     flavor: message.flavor,
                     content: message.content,
@@ -223,7 +223,7 @@ class ChatPinsLog extends Application {
             // Otherwise, append the message to the bottom of the log
             else {
                 log.append(html);
-                if (this.isAtBottom || message.author._id === game.user._id)
+                if (this.isAtBottom || message?.author?._id === game.user._id)
                     this.scrollBottom({ waitImages: true });
             }
 
@@ -256,7 +256,7 @@ class ChatPinsLog extends Application {
         },
     ): Promise<void> {
         if (!this.rendered) return;
-        if (options.waitImages) await this._waitForImages();
+        if (options.waitImages) await this.#waitForImages();
         const log = this.element[0].querySelector("#chat-log");
         log?.lastElementChild?.scrollIntoView(options.scrollOptions);
         // if (popout) this._popout?.scrollBottom({ waitImages, scrollOptions });
@@ -323,7 +323,8 @@ class ChatPinsLog extends Application {
 
     override activateListeners(html: JQuery<HTMLElement>): void {
         // Load new messages on scroll
-        // html.find("#chat-log").scroll(this.#onScrollLog.bind(this));
+        // @ts-expect-error Doesn't like it, but copied from foundry
+        html.find("#chat-pins").scroll(this.#onScrollLog.bind(this));
 
         // Single Message Delete
         html.on("click", "a.message-delete", this.#onDeleteMessage.bind(this));
@@ -382,6 +383,7 @@ class ChatPinsLog extends Application {
                     await this._renderInner({}, {});
                 },
             },
+            // @ts-expect-error Not the best, but easiest way to get options from foundry
             ...ChatLog.prototype._getEntryContextOptions(),
             // {
             //     name: "CHAT.PopoutMessage",
@@ -470,7 +472,7 @@ class ChatPinsLog extends Application {
      * @param {UIEvent} event   The initial scroll event
      * @private
      */
-    #onScrollLog(event: UIEvent): Promise<void> | void {
+    async #onScrollLog(event: UIEvent) {
         if (!this.rendered) return;
         const log = event.target! as HTMLElement;
         const pct = log.scrollTop / (log.scrollHeight - log.clientHeight);
@@ -480,6 +482,28 @@ class ChatPinsLog extends Application {
                 this.element,
                 CONFIG.ChatMessage.batchSize,
             );
+    }
+
+    /**
+     * Wait for any images present in the Application to load.
+     *
+     * @returns  A Promise that resolves when all images have loaded.
+     */
+    #waitForImages() {
+        return new Promise((resolve) => {
+            let loaded = 0;
+            const images = Array.from(this.element.find("img")).filter(
+                (img) => !img.complete,
+            );
+            if (!images.length) resolve(null);
+            for (const img of images) {
+                img.onload = img.onerror = () => {
+                    loaded += 1;
+                    img.onload = img.onerror = null;
+                    if (loaded >= images.length) resolve(null);
+                };
+            }
+        });
     }
 }
 
