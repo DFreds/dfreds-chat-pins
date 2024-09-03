@@ -1,0 +1,12 @@
+{
+    "ChatPins": {
+        "AppName": "Registro de Mensagens Fixadas",
+        "ChatPins": "Mensagens Fixadas",
+        "PinnedBy": "Fixado por {pinner}",
+        "Unknown": "Desconhecido(a)",
+        "JumpToPin": "Pular para Mensagem Fixada",
+        "PinMessage": "Fixar Mensagem",
+        "UnpinMessage": "Desafixar Mensagem",
+        "DeleteAllNote": "Note que isso não excluirá nenhuma mensagem fixada."
+    }
+}
