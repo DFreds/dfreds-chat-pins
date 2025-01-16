@@ -1,5 +1,5 @@
-import { id as MODULE_ID } from "@static/module.json";
 import { ChatPinsLog } from "./chat-pins-log.ts";
+import { MODULE_ID } from "./constants.ts";
 
 class ChatPins {
     #FLAG = "pinned";

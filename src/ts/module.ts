@@ -1,8 +1,8 @@
 import "../styles/style.scss"; // Keep or else vite will not include this
-import { id as MODULE_ID } from "@static/module.json";
 import { libWrapper } from "@static/lib/shim.ts";
 import { ChatPins } from "./chat-pins.ts";
 import { findChatPinsLogApp } from "./foundry-helpers.ts";
+import { MODULE_ID } from "./constants.ts";
 
 /**
  * Handle setting up the app and lib wrapper overrides
