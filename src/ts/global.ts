@@ -1,5 +1,3 @@
-import { ClientBaseChatMessage } from "types/foundry/client/data/documents/client-base-mixes.js";
-
 declare global {
     namespace globalThis {
         let CONFIG: Config<
@@ -45,10 +43,6 @@ declare global {
             CombatTracker<Combat | null>,
             Hotbar
         >;
-
-        interface ChatMessage extends ClientBaseChatMessage {
-            logged: boolean;
-        }
     }
 
     type AnyFunction = (...args: any) => any;
