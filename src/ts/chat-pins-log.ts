@@ -50,7 +50,7 @@ class ChatPinsLog extends Application {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "chat-pins",
             template: "modules/dfreds-chat-pins/templates/chat-pins-app.html",
-            title: "ChatPins.AppName",
+            title: EN_JSON.ChatPins.AppName,
             popOut: true,
             width: 300,
             height: 600,
@@ -355,7 +355,7 @@ class ChatPinsLog extends Application {
     #getEntryContextOptions(): EntryContextOption[] {
         return [
             {
-                name: "ChatPins.JumpToPin",
+                name: EN_JSON.ChatPins.JumpToPin,
                 icon: '<i class="fas fa-bullseye"></i>',
                 condition: () => true,
                 callback: (li) => {
@@ -369,7 +369,7 @@ class ChatPinsLog extends Application {
                 },
             },
             {
-                name: "ChatPins.UnpinMessage",
+                name: EN_JSON.ChatPins.UnpinMessage,
                 icon: '<i class="fas fa-thumbtack"></i>',
                 condition: (li) => {
                     const message = game.messages.get(li.data("messageId"));
