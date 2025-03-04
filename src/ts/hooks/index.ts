@@ -1,9 +1,10 @@
-import { DeleteChatMessage } from "./deleteChatMessage.ts";
-import { GetChatLogEntryContext } from "./getChatLogEntryContext.ts";
+import { Init } from "./init.ts";
 import { Ready } from "./ready.ts";
 import { RenderChatLog } from "./renderChatLog.ts";
 import { RenderChatMessage } from "./renderChatMessage.ts";
 import { UpdateChatMessage } from "./updateChatMessage.ts";
+import { GetChatLogEntryContext } from "./getChatLogEntryContext.ts";
+import { DeleteChatMessage } from "./deleteChatMessage.ts";
 
 interface Listener {
     listen(): void;
@@ -12,6 +13,7 @@ interface Listener {
 const HooksChatPins = {
     listen(): void {
         const listeners: Listener[] = [
+            Init,
             Ready,
             RenderChatMessage,
             RenderChatLog,
