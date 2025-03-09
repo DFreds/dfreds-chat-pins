@@ -42,7 +42,7 @@
 - Jump to the location of the pin in the main chat log by right-clicking it in the pinned chat log
 - When flushing the entire chat log, all pinned messages will remain
 
-![Chat Pins](docs/chat-pins.png)
+![Chat Pins](https://www.dfreds-modules.com/assets/images/chat-pins-aa94092faa75ed44f329fe42f864d37a.png)
 
 ## Getting Started
 
