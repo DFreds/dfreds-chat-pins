@@ -35,27 +35,13 @@
     <b>DFreds Chat Pins</b> is a FoundryVTT module that allows pinning messages to the chat.
 </p>
 
-## Let Me Sell You This
+## Features
 
-Have you ever wanted to save a specific message, but delete all those other
-crappy ones? What if you want to refer to it later? That sounds like a lot of
-scrolling. Lame.
+- Easily pin or unpin any message by right-clicking it
+- View an entirely separate chat log of all the pinned messages by pressing the button above the message box
+- Jump to the location of the pin in the main chat log by right-clicking it in the pinned chat log
+- When flushing the entire chat log, all pinned messages will remain
 
-## What This Module Does
+## Getting Started
 
-This module allows you to right-click any message in the chat log and pin or
-unpin it. This stops Foundry from deleting it when you flush the chat log.
-
-Additionally, you can refer to any of the pinned messages using the handy Chat
-Pin Log application by clicking the pin icon above the chat text box.
-Right-clicking any of the pinned chats in this chat log will provide an
-additional option to jump to it in the main chat log.
-
-![Chat Pins](docs/chat-pins.png)
-
-## Required Modules
-
-- [libWrapper](https://foundryvtt.com/packages/lib-wrapper) by ruipin - A
-  library that wraps core Foundry methods to make it easier for module
-  developers to add functionality. Note that if you for some reason don't want
-  to install this, a shim will be used instead.
+### See the [documentation](https://www.dfreds-modules.com/free-modules/chat-pins) page for details.
