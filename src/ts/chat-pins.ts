@@ -77,7 +77,6 @@ class ChatPins {
         );
     }
 
-    // TODO do your own i18n
     /**
      * Prompts to delete all messages from the chat log except pins.
      *
