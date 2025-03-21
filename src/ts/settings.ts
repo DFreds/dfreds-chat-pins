@@ -8,18 +8,18 @@ class Settings {
 
     constructor() {
         this.#USER_ROLES[CONST.USER_ROLES.PLAYER] = game.i18n.localize(
-            EN_JSON.ChatPins.Setting.Player,
+            "ChatPins.Setting.Player",
         );
         this.#USER_ROLES[CONST.USER_ROLES.TRUSTED] = game.i18n.localize(
-            EN_JSON.ChatPins.Setting.TrustedPlayer,
+            "ChatPins.Setting.TrustedPlayer",
         );
         this.#USER_ROLES[CONST.USER_ROLES.ASSISTANT] = game.i18n.localize(
-            EN_JSON.ChatPins.Setting.AssistantGM,
+            "ChatPins.Setting.AssistantGM",
         );
         this.#USER_ROLES[CONST.USER_ROLES.GAMEMASTER] = game.i18n.localize(
-            EN_JSON.ChatPins.Setting.GameMaster,
+            "ChatPins.Setting.GameMaster",
         );
-        this.#USER_ROLES[5] = game.i18n.localize(EN_JSON.ChatPins.Setting.None);
+        this.#USER_ROLES[5] = game.i18n.localize("ChatPins.Setting.None");
     }
 
     register(): void {
@@ -28,8 +28,8 @@ class Settings {
 
     #registerPinPermission(): void {
         game.settings.register(MODULE_ID, this.#PIN_PERMISSION, {
-            name: EN_JSON.ChatPins.Setting.PinPermissionName,
-            hint: EN_JSON.ChatPins.Setting.PinPermissionHint,
+            name: "ChatPins.Setting.PinPermissionName",
+            hint: "ChatPins.Setting.PinPermissionHint",
             scope: "world",
             config: true,
             default: CONST.USER_ROLES.GAMEMASTER,

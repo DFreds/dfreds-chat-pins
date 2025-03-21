@@ -12,7 +12,7 @@ class ChatPins {
     addPinButton(chatHtml: JQuery<HTMLElement>): void {
         const pinButton = $(
             `<a class="chat-pins" title="${game.i18n.localize(
-                EN_JSON.ChatPins.ChatPins,
+                "ChatPins.ChatPins",
             )}"><i class="fas fa-thumbtack"></i></a>`,
         );
         pinButton.click(async () => {
@@ -73,7 +73,7 @@ class ChatPins {
         const pinnerId = message.getFlag(MODULE_ID, this.#FLAG) as string;
         return (
             game.users.get(pinnerId)?.name ??
-            game.i18n.localize(EN_JSON.ChatPins.Unknown)
+            game.i18n.localize("ChatPins.Unknown")
         );
     }
 
@@ -91,7 +91,7 @@ class ChatPins {
             content: `
             <h4>${game.i18n.localize("AreYouSure")}</h4>
             <p>${game.i18n.localize("CHAT.FlushWarning")}</p>
-            <p>${game.i18n.localize(EN_JSON.ChatPins.DeleteAllNote)}</p>`,
+            <p>${game.i18n.localize("ChatPins.DeleteAllNote")}</p>`,
             yes: async () => {
                 const notPinnedIds = game.messages
                     .filter(

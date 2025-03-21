@@ -10,7 +10,7 @@ const RenderChatMessage: Listener = {
             const chatPins = new ChatPins();
 
             if (chatPins.isPinned(message)) {
-                const pinnedBy = game.i18n.format(EN_JSON.ChatPins.PinnedBy, {
+                const pinnedBy = game.i18n.format("ChatPins.PinnedBy", {
                     pinner: chatPins.pinner(message),
                 });
                 const pinnedByHtml = $(`<p>${pinnedBy}</p>`);

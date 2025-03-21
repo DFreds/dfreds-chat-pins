@@ -13,7 +13,7 @@ const GetChatLogEntryContext: Listener = {
 
             entries.unshift(
                 {
-                    name: EN_JSON.ChatPins.PinMessage,
+                    name: "ChatPins.PinMessage",
                     icon: '<i class="fas fa-thumbtack"></i>',
                     condition: (li) => {
                         const messageId = li.data("messageId");
@@ -44,7 +44,7 @@ const GetChatLogEntryContext: Listener = {
                     },
                 },
                 {
-                    name: EN_JSON.ChatPins.UnpinMessage,
+                    name: "ChatPins.UnpinMessage",
                     icon: '<i class="fas fa-thumbtack"></i>',
                     condition: (li) => {
                         const messageId = li.data("messageId");
