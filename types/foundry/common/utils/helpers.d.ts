@@ -27,6 +27,20 @@ export function deepClone<T>(original: T): T;
 export function duplicate<T>(original: T): T;
 
 /**
+ * Search up the prototype chain and return the class that defines the given property.
+ * @param obj    A class instance or class definition which contains a property.
+ * If a class instance is passed the property is treated as an instance
+ * attribute.  If a class constructor is passed the property is treated as a
+ * static attribute.
+ * @param property The property name
+ * @returns The class that defines the property
+ */
+export function getDefiningClass(
+    obj: object,
+    property: string,
+): ConstructorOf<object>;
+
+/**
  * Test whether a value is empty-like; either undefined or a content-less object.
  * @param value The value to test
  * @returns Is the value empty-like?

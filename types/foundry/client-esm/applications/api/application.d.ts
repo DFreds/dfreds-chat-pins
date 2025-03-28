@@ -99,6 +99,8 @@ export default abstract class ApplicationV2<
      */
     static inheritanceChain(): Generator<ApplicationV2>;
 
+    static waitForImages(element: HTMLElement): Promise<void>;
+
     /**
      * Initialize configuration options for the Application instance.
      * The default behavior of this method is to intelligently merge options for each class with those of their parents.
@@ -216,6 +218,16 @@ export default abstract class ApplicationV2<
      */
     protected _removeElement(element: HTMLElement): void;
 
+    protected _createContextMenu(
+        handler: () => ContextMenuEntry[],
+        selector: string,
+        options?: {
+            container?: HTMLElement;
+            hookName?: string;
+            parentClassHooks?: boolean;
+        },
+    ): void;
+
     /* -------------------------------------------- */
     /*  Positioning                                 */
     /* -------------------------------------------- */
@@ -313,7 +325,10 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param  options                 Provided render options
      */
-    protected _onFirstRender(context: object, options: TRenderOptions): void;
+    protected _onFirstRender(
+        context: object,
+        options: TRenderOptions,
+    ): void | Promise<void>;
 
     /**
      * Actions performed before any render of the Application.

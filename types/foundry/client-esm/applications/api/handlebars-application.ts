@@ -47,9 +47,11 @@ export default function HandlebarsApplicationMixin<
         protected async _preparePartContext(
             partId: string,
             context: object,
+            options: HandlebarsRenderOptions,
         ): Promise<object> {
             partId;
             context;
+            options;
             return {};
         }
 
