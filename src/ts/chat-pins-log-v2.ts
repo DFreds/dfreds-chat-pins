@@ -29,8 +29,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
         position: {
             width: 300,
             height: 600,
-            top: 400,
-            left: 1300,
         },
         actions: {
             deleteMessage: ChatPinsLogV2.#onDeleteMessage,
