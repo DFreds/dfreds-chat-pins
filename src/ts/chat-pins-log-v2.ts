@@ -28,7 +28,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
         },
         position: {
             width: 300,
-            height: 600,
+            height: 1000,
         },
         actions: {
             deleteMessage: ChatPinsLogV2.#onDeleteMessage,
@@ -230,14 +230,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
             ".message[data-message-id]",
         );
     }
-
-    // async _onRender(
-    //     context: object,
-    //     options: ApplicationRenderOptions,
-    // ): Promise<void> {
-    //     await super._onRender(context, options);
-    //     this._toggleNotifications();
-    // }
 
     protected override async _preparePartContext(
         partId: string,
