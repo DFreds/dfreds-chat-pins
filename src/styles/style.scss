@@ -1,16 +1,3 @@
-#chat-pins-log {
-    flex: 1;
-    height: calc(100% - 130px);
-    margin: 0;
+#chat-pins .window-content {
     padding: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    list-style: none;
-}
-
-body.stream #chat-pins {
-    left: 20px;
-}
-body.stream #chat-pins #chat-log {
-    height: 100%;
 }
