@@ -1,4 +1,4 @@
-import { ChatPinsLog } from "./chat-pins-log.ts";
+import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
 import { MODULE_ID } from "./constants.ts";
 
 class ChatPins {
@@ -11,25 +11,14 @@ class ChatPins {
      */
     addPinButton(chatHtml: JQuery<HTMLElement>): void {
         const pinButton = $(
-            `<a class="chat-pins" title="${game.i18n.localize(
-                "ChatPins.ChatPins",
-            )}"><i class="fas fa-thumbtack"></i></a>`,
+            `<button type="button" class="ui-control icon fa-solid fa-thumbtack" data-tooltip="ChatPins.ChatPins" aria-label="${game.i18n.localize("ChatPins.ChatPins")}" data-action="chat-pins"></button>`,
         );
-        pinButton.click(async () => {
-            new ChatPinsLog().render(true);
+        pinButton.on("click", async () => {
+            console.log("clicked");
+            new ChatPinsLogV2().render(true);
         });
-        let flex = "0 0 72px";
 
-        if (game.user.role < CONST.USER_ROLES.ASSISTANT) {
-            const chatControls = chatHtml.find("#chat-controls");
-            chatControls.append(
-                `<div class="control-buttons" style="flex: 0 0 24px;"></div>`,
-            );
-            flex = "0 0 24px";
-        }
-
-        const controlButtons = chatHtml.find("#chat-controls .control-buttons");
-        controlButtons.css("flex", flex);
+        const controlButtons = chatHtml.find(".chat-controls .control-buttons");
         controlButtons.prepend(pinButton);
     }
 

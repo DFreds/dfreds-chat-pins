@@ -5,9 +5,9 @@ import { ChatPins } from "../chat-pins.ts";
  */
 const RenderChatLog = {
     listen(): void {
-        Hooks.on("renderChatLog", (_chatLogApp, $html, _data) => {
+        Hooks.on("renderChatLog", (_chatLogApp, html, _data) => {
             const chatPins = new ChatPins();
-            chatPins.addPinButton($html);
+            chatPins.addPinButton($(html));
         });
     },
 };
