@@ -1,12 +1,12 @@
-import { ChatPinsLog } from "./chat-pins-log.ts";
+import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
 
-function findChatPinsLogApp(): ChatPinsLog | undefined {
-    const openApps = Object.values(ui.windows);
-    const chatPinsLog = openApps.find((app) => app.options.id === "chat-pins");
+function findChatPinsLogApp(): ChatPinsLogV2 | undefined {
+    const applications = foundry.applications.instances;
 
-    if (!chatPinsLog) return undefined;
+    // @ts-expect-error The types provided by pf2e think this is a number
+    const chatPinsLog = applications.get("chat-pins");
 
-    return chatPinsLog as ChatPinsLog;
+    return chatPinsLog as ChatPinsLogV2 | undefined;
 }
 
 export { findChatPinsLogApp };
