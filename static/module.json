@@ -4,9 +4,9 @@
     "description": "A FoundryVTT module that allows pinning messages to the chat.",
     "version": "1.0.0",
     "compatibility": {
-        "minimum": 12,
-        "verified": "12.331",
-        "maximum": 12
+        "minimum": 13,
+        "verified": 13,
+        "maximum": 13
     },
     "esmodules": ["dfreds-chat-pins.mjs"],
     "scripts": [],
