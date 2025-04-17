@@ -5,10 +5,18 @@ import {
 import { ChatPins } from "./chat-pins.ts";
 import { ChatMessageSource } from "types/foundry/common/documents/chat-message.js";
 import { HandlebarsRenderOptions } from "types/foundry/client-esm/applications/api/handlebars-application.ts";
+import { Settings } from "./settings.ts";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
+    #settings: Settings;
+
+    constructor() {
+        super();
+        this.#settings = new Settings();
+    }
+
     static override DEFAULT_OPTIONS: DeepPartial<ApplicationConfiguration> = {
         id: "chat-pins",
         classes: [
@@ -187,11 +195,22 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
                 name: "ChatPins.UnpinMessage",
                 icon: '<i class="fas fa-thumbtack"></i>',
                 condition: (li) => {
-                    const message = game.messages.get(
-                        li.dataset.messageId ?? "",
-                    );
+                    const messageId = $(li).data("messageId");
+                    if (!messageId) return false;
+
+                    const message = game.messages.get(messageId);
                     if (!message) return false;
-                    return game.user.isGM && this.#chatPins.isPinned(message);
+
+                    const isOwner = message.testUserPermission(
+                        game.user,
+                        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
+                    );
+
+                    return (
+                        game.user.role >= this.#settings.pinPermission &&
+                        isOwner &&
+                        this.#chatPins.isPinned(message)
+                    );
                 },
                 callback: async (li) => {
                     const message = game.messages.get(
