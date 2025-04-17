@@ -10,6 +10,11 @@ class ChatPins {
      * @param chatHtml - the html for the chat sidebar
      */
     addPinButton(chatHtml: JQuery<HTMLElement>): void {
+        // Check if pin button already exists
+        if (chatHtml.find('button[data-action="chat-pins"]').length > 0) {
+            return;
+        }
+
         const pinButton = $(
             `<button type="button" class="ui-control icon fa-solid fa-thumbtack" data-tooltip="ChatPins.ChatPins" aria-label="${game.i18n.localize("ChatPins.ChatPins")}" data-action="chat-pins"></button>`,
         );
