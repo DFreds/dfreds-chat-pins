@@ -19,7 +19,16 @@ class ChatPins {
         });
 
         const controlButtons = chatHtml.find(".chat-controls .control-buttons");
-        controlButtons.prepend(pinButton);
+
+        if (controlButtons.length > 0) {
+            controlButtons.prepend(pinButton);
+        } else {
+            // Chat controls > control-buttons are not present, so create them
+            const chatControls = chatHtml.find(".chat-controls");
+            const controlButtonsDiv = $('<div class="control-buttons"></div>');
+            chatControls.append(controlButtonsDiv);
+            controlButtonsDiv.append(pinButton);
+        }
     }
 
     /**
