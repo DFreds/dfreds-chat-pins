@@ -1,6 +1,8 @@
 import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
 import { MODULE_ID } from "./constants.ts";
 
+const { DialogV2 } = foundry.applications.api;
+
 class ChatPins {
     #FLAG = "pinned";
 
@@ -88,25 +90,34 @@ class ChatPins {
      * @returns a promise that resolves when the dialog is finished
      */
     deleteAllExceptPins(): Promise<any> {
-        // @ts-expect-error It wants a bunch of "Required" params in the options, but you don't actually need them
-        return Dialog.confirm({
-            title: game.i18n.localize("CHAT.FlushTitle"),
-            content: `
-            <h4>${game.i18n.localize("AreYouSure")}</h4>
-            <p>${game.i18n.localize("CHAT.FlushWarning")}</p>
-            <p>${game.i18n.localize("ChatPins.DeleteAllNote")}</p>`,
-            yes: async () => {
-                const notPinnedIds = game.messages
-                    .filter(
-                        (message) => !message.getFlag(MODULE_ID, this.#FLAG),
-                    )
-                    .map((message) => message.id);
+        const question = game.i18n.localize("AreYouSure");
+        const warning = game.i18n.localize("CHAT.FlushWarning");
+        const deleteAllNote = game.i18n.localize("ChatPins.DeleteAllNote");
 
-                await ChatMessage.deleteDocuments(notPinnedIds);
-            },
-            options: {
-                top: window.innerHeight - 175,
+        return DialogV2.confirm({
+            window: { title: "CHAT.FlushTitle", controls: [] },
+            content: `<p><strong>${question}</strong> ${warning}</p><p>${deleteAllNote}</p>`,
+            position: {
+                top: window.innerHeight - 150,
                 left: window.innerWidth - 720,
+            },
+            yes: {
+                callback: async () => {
+                    const jumpToBottomElement =
+                        document.querySelector(".jump-to-bottom");
+                    if (jumpToBottomElement) {
+                        (jumpToBottomElement as HTMLElement).hidden = true;
+                    }
+
+                    const notPinnedIds = game.messages
+                        .filter(
+                            (message) =>
+                                !message.getFlag(MODULE_ID, this.#FLAG),
+                        )
+                        .map((message) => message.id);
+
+                    await ChatMessage.deleteDocuments(notPinnedIds);
+                },
             },
         });
     }
