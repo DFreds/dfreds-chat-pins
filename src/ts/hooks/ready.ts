@@ -11,7 +11,7 @@ const Ready: Listener = {
              */
             libWrapper.register(
                 MODULE_ID,
-                "Messages.prototype.flush",
+                "foundry.documents.collections.ChatMessages.prototype.flush",
                 function (
                     this: Messages,
                     _wrapper: AnyFunction,
