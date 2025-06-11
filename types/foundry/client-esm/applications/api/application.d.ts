@@ -347,7 +347,10 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param options      Provided render options
      */
-    protected _onRender(context: object, options: TRenderOptions): void;
+    protected _onRender(
+        context: object,
+        options: TRenderOptions,
+    ): void | Promise<void>;
 
     /**
      * Actions performed before closing the Application.

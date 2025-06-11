@@ -250,6 +250,27 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
         );
     }
 
+    protected override async _onRender(
+        context: object,
+        options: ApplicationRenderOptions,
+    ): Promise<void> {
+        await super._onRender(context, options);
+
+        if (this.options.classes.includes("themed")) return;
+
+        this.element.classList.remove("theme-light", "theme-dark");
+        const { colorScheme } = game.settings.get("core", "uiConfig") as {
+            colorScheme: { interface: string };
+        };
+
+        if (colorScheme.interface) {
+            this.element.classList.add(
+                "themed",
+                `theme-${colorScheme.interface}`,
+            );
+        }
+    }
+
     protected override async _preparePartContext(
         partId: string,
         context: object,
