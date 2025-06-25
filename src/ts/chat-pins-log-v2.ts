@@ -6,8 +6,8 @@ import { Settings } from "./settings.ts";
 import { ChatPins } from "./chat-pins.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
-import { ChatMessageSource } from "@client/documents/_module.mjs";
-import { Messages } from "@client/documents/collections/_module.mjs";
+import Messages from "@client/documents/collections/chat-messages.mjs";
+import { ChatMessageSource } from "@common/documents/chat-message.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
