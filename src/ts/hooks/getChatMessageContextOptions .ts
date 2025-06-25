@@ -1,6 +1,7 @@
 import { ChatPins } from "../chat-pins.ts";
 import { Settings } from "../settings.ts";
 import { Listener } from "./index.ts";
+import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 
 /**
  * Add new context menu operations to the chat log entries

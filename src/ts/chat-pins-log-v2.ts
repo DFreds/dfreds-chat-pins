@@ -1,15 +1,19 @@
 import {
+    ApplicationClosingOptions,
     ApplicationConfiguration,
-    ApplicationRenderOptions,
-} from "types/foundry/client-esm/applications/_types.js";
-import { ChatPins } from "./chat-pins.ts";
-import { ChatMessageSource } from "types/foundry/common/documents/chat-message.js";
-import { HandlebarsRenderOptions } from "types/foundry/client-esm/applications/api/handlebars-application.ts";
+} from "@client/applications/_types.mjs";
 import { Settings } from "./settings.ts";
+import { ChatPins } from "./chat-pins.ts";
+import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
+import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
+import { ChatMessageSource } from "@client/documents/_module.mjs";
+import { Messages } from "@client/documents/collections/_module.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
+class ChatPinsLogV2 extends HandlebarsApplicationMixin(
+    ApplicationV2<ApplicationConfiguration, HandlebarsRenderOptions, object>,
+) {
     #settings: Settings;
 
     constructor() {
@@ -121,7 +125,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
     #chatPins: ChatPins = new ChatPins();
 
     protected override _configureRenderOptions(
-        options: ApplicationRenderOptions,
+        options: HandlebarsRenderOptions,
     ): void {
         super._configureRenderOptions(options);
         // If the log has already been rendered once, prevent it from being re-rendered.
@@ -141,7 +145,9 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
         const log = this.element.querySelector(".chat-log");
 
         // Get the index of the last rendered chat message
-        let lastIdx = messages.findIndex((m) => m.id === this.#lastId);
+        let lastIdx = messages.findIndex(
+            (m: { id: string | null | undefined }) => m.id === this.#lastId,
+        );
         lastIdx = lastIdx > -1 ? lastIdx : messages.length;
         if (!lastIdx) {
             this.#renderingBatch = false;
@@ -228,7 +234,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
 
     protected override async _onFirstRender(
         context: object,
-        options: ApplicationRenderOptions,
+        options: HandlebarsRenderOptions,
     ): Promise<void> {
         await super._onFirstRender(context, options);
 
@@ -252,7 +258,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
 
     protected override async _onRender(
         context: object,
-        options: ApplicationRenderOptions,
+        options: HandlebarsRenderOptions,
     ): Promise<void> {
         await super._onRender(context, options);
 
@@ -274,7 +280,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
     protected override async _preparePartContext(
         partId: string,
         context: object,
-        options: ApplicationRenderOptions,
+        options: HandlebarsRenderOptions,
     ): Promise<object> {
         await super._preparePartContext(partId, context, options);
         // switch (partId) {
@@ -308,7 +314,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
         });
     }
 
-    protected override _onClose(options: ApplicationRenderOptions): void {
+    protected override _onClose(options: ApplicationClosingOptions): void {
         super._onClose(options);
         this.#lastId = null;
     }
@@ -443,7 +449,9 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
             if (!message?.timestamp) return;
             const stamp = li.querySelector(".message-timestamp");
             if (stamp) {
-                stamp.textContent = foundry.utils.timeSince(message.timestamp);
+                stamp.textContent = foundry.utils.timeSince(
+                    message.timestamp as unknown as string,
+                );
             }
         }
     }
@@ -522,9 +530,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(ApplicationV2) {
     ): Promise<HTMLElement> {
         const hasGetHTML =
             foundry.utils.getDefiningClass(message, "getHTML") !== ChatMessage;
-        // @ts-expect-error it exists, not typed
         if (!hasGetHTML) return message.renderHTML(options);
-        /** @deprecated since v13 */
         // @ts-expect-error it exists, not typed
         const html = await message.getHTML(options);
         if (html instanceof HTMLElement) return html;

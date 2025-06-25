@@ -2,6 +2,7 @@ import { libWrapper } from "@static/lib/shim.ts";
 import { ChatPins } from "../chat-pins.ts";
 import { MODULE_ID } from "../constants.ts";
 import { Listener } from "./index.ts";
+import Messages from "@client/documents/collections/chat-messages.mjs";
 
 const Ready: Listener = {
     listen(): void {
