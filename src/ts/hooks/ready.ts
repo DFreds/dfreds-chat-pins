@@ -13,11 +13,7 @@ const Ready: Listener = {
             libWrapper.register(
                 MODULE_ID,
                 "foundry.documents.collections.ChatMessages.prototype.flush",
-                function (
-                    this: Messages,
-                    _wrapper: AnyFunction,
-                    ..._args: any
-                ) {
+                function (this: Messages, _wrapper: any, ..._args: any) {
                     const chatPins = new ChatPins();
                     chatPins.deleteAllExceptPins();
                 },

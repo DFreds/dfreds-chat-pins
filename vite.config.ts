@@ -82,20 +82,12 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                     // Foundry VTT internal modules
                     /^@client\//,
                     /^@common\//,
-                    /^@server\//,
-                    // Foundry global objects
-                    "foundry",
-                    "game",
-                    "ui",
-                    "CONST",
-                    "CONFIG",
-                    "libWrapper",
                 ],
                 output: {
                     assetFileNames: ({ name }): string =>
                         name === "style.css"
                             ? "styles/dfreds-chat-pins.css"
-                            : name ?? "",
+                            : (name ?? ""),
                     chunkFileNames: "[name].mjs",
                     entryFileNames: "dfreds-chat-pins.mjs",
                     // manualChunks: {

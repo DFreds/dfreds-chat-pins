@@ -52,12 +52,6 @@ declare global {
             Scene,
             User
         >;
-        export import fa = foundry.applications;
-        export import fav1 = foundry.appv1;
-        export import fc = foundry.canvas;
-        export import fd = foundry.documents;
-        export import fh = foundry.helpers;
-        export import fu = foundry.utils;
 
         const ui: FoundryUI<
             ActorDirectory,
@@ -69,6 +63,5 @@ declare global {
         >;
     }
 
-    type AnyFunction = (...args: any) => any;
     const BUILD_MODE: "development" | "stage" | "production";
 }
