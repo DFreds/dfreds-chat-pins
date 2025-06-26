@@ -130,9 +130,7 @@ export default abstract class ApplicationV2<
      * @param options      Options provided directly to the constructor
      * @returns Configured options for the application instance
      */
-    protected _initializeApplicationOptions(
-        options: DeepPartial<TConfig>,
-    ): TConfig;
+    protected _initializeApplicationOptions(options: DeepPartial<TConfig>): TConfig;
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -153,9 +151,7 @@ export default abstract class ApplicationV2<
      * Modify the provided options passed to a render request.
      * @param options                 Options which configure application rendering behavior
      */
-    protected _configureRenderOptions(
-        options: DeepPartial<TRenderOptions>,
-    ): void;
+    protected _configureRenderOptions(options: DeepPartial<TRenderOptions>): void;
 
     /**
      * Prepare application rendering context data for a given render request.
@@ -174,9 +170,7 @@ export default abstract class ApplicationV2<
      * Get the configuration for a tabs group.
      * @param group The ID of a tabs group
      */
-    protected _getTabsConfig(
-        group: string,
-    ): ApplicationTabsConfiguration | null;
+    protected _getTabsConfig(group: string): ApplicationTabsConfiguration | null;
 
     /**
      * Configure the array of header control menu options
@@ -196,10 +190,7 @@ export default abstract class ApplicationV2<
      * @returns            The result of HTML rendering may be implementation specific.
      *                     Whatever value is returned here is passed to _replaceHTML
      */
-    protected abstract _renderHTML(
-        context: ApplicationRenderContext,
-        options: TRenderOptions,
-    ): Promise<unknown>;
+    protected abstract _renderHTML(context: ApplicationRenderContext, options: TRenderOptions): Promise<unknown>;
 
     /**
      * Replace the HTML of the application with the result provided by the rendering backend.
@@ -208,11 +199,7 @@ export default abstract class ApplicationV2<
      * @param content                 The content element into which the rendered result must be inserted
      * @param options                 Options which configure application rendering behavior
      */
-    protected abstract _replaceHTML(
-        result: unknown,
-        content: HTMLElement,
-        options: TRenderOptions,
-    ): void;
+    protected abstract _replaceHTML(result: unknown, content: HTMLElement, options: TRenderOptions): void;
 
     /**
      * Render the outer framing HTMLElement which wraps the inner HTML of the Application.
@@ -221,9 +208,7 @@ export default abstract class ApplicationV2<
     protected _renderFrame(options: TRenderOptions): Promise<HTMLElement>;
 
     /** Render a header control button. */
-    protected _renderHeaderControl(
-        control: ApplicationHeaderControlsEntry,
-    ): HTMLLIElement;
+    protected _renderHeaderControl(control: ApplicationHeaderControlsEntry): HTMLLIElement;
 
     /**
      * When the Application is rendered, optionally update aspects of the window frame.
@@ -281,9 +266,7 @@ export default abstract class ApplicationV2<
      * @param position        Requested Application positioning data
      * @returns               Resolved Application positioning data
      */
-    protected _updatePosition(
-        position: ApplicationPosition,
-    ): ApplicationPosition;
+    protected _updatePosition(position: ApplicationPosition): ApplicationPosition;
 
     /* -------------------------------------------- */
     /*  Other Public Methods                        */
@@ -323,12 +306,7 @@ export default abstract class ApplicationV2<
     changeTab(
         tab: string,
         group: string,
-        options?: {
-            event?: Event;
-            navElement?: HTMLElement;
-            force?: boolean;
-            updatePosition?: boolean;
-        },
+        options?: { event?: Event; navElement?: HTMLElement; force?: boolean; updatePosition?: boolean },
     ): void;
 
     /**
@@ -356,10 +334,7 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param options      Provided render options
      */
-    protected _preFirstRender(
-        context: Record<string, unknown>,
-        options: TRenderOptions,
-    ): Promise<void>;
+    protected _preFirstRender(context: Record<string, unknown>, options: TRenderOptions): Promise<void>;
 
     /**
      * Actions performed after a first render of the Application.
@@ -367,10 +342,7 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param  options                 Provided render options
      */
-    protected _onFirstRender(
-        context: object,
-        options: TRenderOptions,
-    ): Promise<void>;
+    protected _onFirstRender(context: object, options: TRenderOptions): void;
 
     /**
      * Actions performed before any render of the Application.
@@ -378,10 +350,7 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param options      Provided render options
      */
-    protected _preRender(
-        context: object,
-        options: TRenderOptions,
-    ): Promise<void>;
+    protected _preRender(context: object, options: TRenderOptions): Promise<void>;
 
     /**
      * Actions performed after any render of the Application.
@@ -389,10 +358,7 @@ export default abstract class ApplicationV2<
      * @param context      Prepared context data
      * @param options      Provided render options
      */
-    protected _onRender(
-        context: object,
-        options: TRenderOptions,
-    ): Promise<void>;
+    protected _onRender(context: object, options: TRenderOptions): Promise<void>;
 
     /**
      * Actions performed before closing the Application.
@@ -448,20 +414,14 @@ export default abstract class ApplicationV2<
      * @param formConfig     The form configuration for which this handler is bound
      * @param event          The form submission event
      */
-    protected _onSubmitForm(
-        formConfig: ApplicationFormConfiguration,
-        event: Event | SubmitEvent,
-    ): Promise<void>;
+    protected _onSubmitForm(formConfig: ApplicationFormConfiguration, event: Event | SubmitEvent): Promise<void>;
 
     /**
      * Handle changes to an input element within the form.
      * @param formConfig     The form configuration for which this handler is bound
      * @param event          An input change event within the form
      */
-    protected _onChangeForm(
-        formConfig: ApplicationFormConfiguration,
-        event: Event,
-    ): void;
+    protected _onChangeForm(formConfig: ApplicationFormConfiguration, event: Event): void;
 
     /* -------------------------------------------- */
     /*  Helper Methods                              */
@@ -480,10 +440,7 @@ export default abstract class ApplicationV2<
      * @param element  The element which is transitioning
      * @param  timeout A timeout in milliseconds in case the transitionend event does not occur
      */
-    protected _awaitTransition(
-        element: HTMLElement,
-        timeout: number,
-    ): Promise<void>;
+    protected _awaitTransition(element: HTMLElement, timeout: number): Promise<void>;
 
     /**
      * Create a ContextMenu instance used in this Application.
@@ -498,11 +455,7 @@ export default abstract class ApplicationV2<
     protected _createContextMenu(
         handler: () => ContextMenuEntry[],
         selector: string,
-        options?: Record<string, unknown> & {
-            container?: HTMLElement;
-            hookName?: string;
-            parentClassHooks?: boolean;
-        },
+        options?: Record<string, unknown> & { container?: HTMLElement; hookName?: string; parentClassHooks?: boolean },
     ): ContextMenu | null;
 
     /**
