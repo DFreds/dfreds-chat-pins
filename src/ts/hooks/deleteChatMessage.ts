@@ -6,7 +6,7 @@ import { Listener } from "./index.ts";
  */
 const DeleteChatMessage: Listener = {
     listen(): void {
-        Hooks.on("deleteChatMessage", (m: any, _data: any, _userId: any) => {
+        Hooks.on("deleteChatMessage", (m, _data, _userId) => {
             const message = m as ChatMessage;
             const app = findChatPinsLogApp();
 
