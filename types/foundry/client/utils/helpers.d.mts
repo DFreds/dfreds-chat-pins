@@ -131,9 +131,7 @@ export function timeSince(timeStamp: Date | string): string;
  * A single HTMLElement is returned if the provided string contains only a single top-level element.
  * An HTMLCollection is returned if the provided string contains multiple top-level elements.
  */
-export function parseHTML<THTML extends HTMLCollection | HTMLElement>(
-    htmlString: string,
-): THTML;
+export function parseHTML<THTML extends HTMLCollection | HTMLElement>(htmlString: string): THTML;
 
 /**
  * Search up the prototype chain and return the class that defines the given property.
