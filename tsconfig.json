@@ -49,7 +49,6 @@
         ]
     },
     "include": [
-        "./build/**/*",
         "./src/**/*",
         "./tests/**/*.ts",
         "./types/foundry/global-external.d.mts",

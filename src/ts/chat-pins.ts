@@ -111,10 +111,10 @@ class ChatPins {
 
                     const notPinnedIds = game.messages
                         .filter(
-                            (message) =>
+                            (message: ChatMessage) =>
                                 !message.getFlag(MODULE_ID, this.#FLAG),
                         )
-                        .map((message) => message.id);
+                        .map((message: ChatMessage) => message.id);
 
                     await ChatMessage.deleteDocuments(notPinnedIds);
                 },
