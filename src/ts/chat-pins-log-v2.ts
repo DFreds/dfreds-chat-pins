@@ -6,10 +6,10 @@ import { Settings } from "./settings.ts";
 import { ChatPins } from "./chat-pins.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
-import Messages from "@client/documents/collections/chat-messages.mjs";
 import { ChatMessageSource } from "@common/documents/chat-message.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ChatLog } = foundry.applications.sidebar.tabs;
 
 class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     ApplicationV2<ApplicationConfiguration, HandlebarsRenderOptions, object>,
@@ -63,10 +63,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     /**
      * A references to the Messages collection that the chat pins log displays.
      */
-    get collection(): Messages {
+    get collection(): foundry.documents.collections.ChatMessages {
         const pinnedMessages = game.messages
-            .filter((message) => this.#chatPins.isPinned(message))
-            .map((message) => {
+            .filter((message: ChatMessage) => this.#chatPins.isPinned(message))
+            .map((message: ChatMessage) => {
                 return {
                     _id: message._id,
                     type: message.type,
@@ -87,7 +87,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 } as ChatMessageSource;
             });
 
-        return new Messages(pinnedMessages);
+        return new foundry.documents.collections.ChatMessages(pinnedMessages);
     }
 
     /**
@@ -420,7 +420,9 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         // A previously invisible message has become visible to this user.
         else {
             const messages = game.messages.contents;
-            const messageIndex = messages.findIndex((m) => m === message);
+            const messageIndex = messages.findIndex(
+                (m: ChatMessage) => m === message,
+            );
             let nextMessage;
             for (let i = messageIndex + 1; i < messages.length; i++) {
                 if (messages[i].visible) {
