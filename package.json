@@ -94,7 +94,5 @@
         "vite-tsconfig-paths": "^5.1.4",
         "yargs": "^17.7.2"
     },
-    "dependencies": {
-        "uuid": "^11.1.0"
-    }
+    "dependencies": {}
 }
