@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+// import packageJSON from "./package.json" with { type: "json" };
 
 const PACKAGE_ID = "modules/dfreds-chat-pins";
 
@@ -84,18 +85,15 @@ const config = Vite.defineConfig(({ command, mode }): Vite.UserConfig => {
                     /^@common\//,
                 ],
                 output: {
-                    assetFileNames: ({ name }): string =>
-                        name === "style.css"
-                            ? "styles/dfreds-chat-pins.css"
-                            : (name ?? ""),
+                    assetFileNames: "styles/dfreds-chat-pins.css",
                     chunkFileNames: "[name].mjs",
                     entryFileNames: "dfreds-chat-pins.mjs",
-                    // manualChunks: {
-                    //     vendor:
-                    //         buildMode === "production"
-                    //             ? Object.keys(packageJSON.dependencies)
-                    //             : [],
-                    // },
+                    manualChunks: {
+                        // vendor:
+                        //     buildMode === "production"
+                        //         ? Object.keys(packageJSON.dependencies)
+                        //         : [],
+                    },
                 },
             },
             target: "es2022",
