@@ -9,7 +9,7 @@ const RenderChatMessageHTML: Listener = {
         Hooks.on("renderChatMessageHTML", (m, html, _data) => {
             const message = m as ChatMessage;
             const chatPins = new ChatPins();
-            const $html = $(html as HTMLElement);
+            const $html = $(html);
 
             if (chatPins.isPinned(message)) {
                 const pinnedBy = game.i18n.format("ChatPins.PinnedBy", {
