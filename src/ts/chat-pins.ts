@@ -9,7 +9,7 @@ class ChatPins {
     /**
      * Adds the pin button to the chat sidebar element
      *
-     * @param chatHtml - the html for the chat sidebar
+     * @param chatHtml - the html for the chat input
      */
     addPinButton(chatHtml: JQuery<HTMLElement>): void {
         // Check if pin button already exists
@@ -25,7 +25,7 @@ class ChatPins {
             new ChatPinsLogV2().render(true);
         });
 
-        const controlButtons = chatHtml.find(".chat-controls .control-buttons");
+        const controlButtons = chatHtml.find("#chat-controls .control-buttons");
 
         if (controlButtons.length > 0) {
             controlButtons.prepend(pinButton);
