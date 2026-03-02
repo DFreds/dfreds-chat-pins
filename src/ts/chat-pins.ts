@@ -31,7 +31,7 @@ class ChatPins {
             controlButtons.prepend(pinButton);
         } else {
             // Chat controls > control-buttons are not present, so create them
-            const chatControls = chatHtml.find(".chat-controls");
+            const chatControls = chatHtml.find("#chat-controls");
             const controlButtonsDiv = $('<div class="control-buttons"></div>');
             chatControls.append(controlButtonsDiv);
             controlButtonsDiv.append(pinButton);
