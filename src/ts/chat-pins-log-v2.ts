@@ -63,7 +63,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     /**
      * A references to the Messages collection that the chat pins log displays.
      */
-    get collection(): foundry.documents.collections.Messages {
+    // @ts-expect-error Just ignore this
+    get collection(): foundry.documents.collections.ChatMessages {
         const pinnedMessages = game.messages
             .filter((message: ChatMessage) => this.#chatPins.isPinned(message))
             .map((message: ChatMessage) => {
@@ -87,7 +88,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 } as ChatMessageSource;
             });
 
-        return new foundry.documents.collections.Messages(pinnedMessages);
+        // @ts-expect-error Just ignore this
+        return new foundry.documents.collections.ChatMessages(pinnedMessages);
     }
 
     /**
@@ -190,6 +192,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     const $message = $(
                         `#chat .chat-message[data-message-id="${messageId}"], #chat-popout .chat-message[data-message-id="${messageId}"]`,
                     );
+
                     $message.each((_index, element) => {
                         (element as HTMLElement).scrollIntoView({
                             behavior: "smooth",
