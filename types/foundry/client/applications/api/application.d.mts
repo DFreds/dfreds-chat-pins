@@ -457,11 +457,4 @@ export default abstract class ApplicationV2<
         selector: string,
         options?: Record<string, unknown> & { container?: HTMLElement; hookName?: string; parentClassHooks?: boolean },
     ): ContextMenu | null;
-
-    /**
-     * Wait for any images in the given element to load.
-     * @param element The element.
-     * @returns A promise that resolves when all images have loaded.
-     */
-    static waitForImages(element: HTMLElement): Promise<void>;
 }

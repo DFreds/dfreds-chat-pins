@@ -153,16 +153,3 @@ export function timeSince(timeStamp: Date | string): string;
  * An HTMLCollection is returned if the provided string contains multiple top-level elements.
  */
 export function parseHTML<THTML extends HTMLCollection | HTMLElement>(htmlString: string): THTML;
-
-/**
- * Search up the prototype chain and return the class that defines the given property.
- * @param object A class instance or class definition which contains a property.
- *               If a class instance is passed the property is treated as an instance attribute.
- *               If a class constructor is passed the property is treated as a static attribute.
- * @param property The property name
- * @returns The class that defines the property
- */
-export function getDefiningClass(
-    object: Object | ConstructorOf<Object>,
-    property: string,
-): ConstructorOf<Object>;
