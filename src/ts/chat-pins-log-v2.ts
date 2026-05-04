@@ -63,7 +63,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     /**
      * A references to the Messages collection that the chat pins log displays.
      */
-    get collection(): foundry.documents.collections.ChatMessages {
+    get collection(): foundry.documents.collections.Messages {
         const pinnedMessages = game.messages
             .filter((message: ChatMessage) => this.#chatPins.isPinned(message))
             .map((message: ChatMessage) => {
@@ -87,7 +87,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 } as ChatMessageSource;
             });
 
-        return new foundry.documents.collections.ChatMessages(pinnedMessages);
+        return new foundry.documents.collections.Messages(pinnedMessages);
     }
 
     /**
@@ -182,11 +182,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     #getEntryContextOptions(): ContextMenuEntry[] {
         return [
             {
-                name: "ChatPins.JumpToPin",
+                label: "ChatPins.JumpToPin",
                 icon: '<i class="fas fa-bullseye"></i>',
-                condition: () => true,
-                callback: (li) => {
-                    const messageId = $(li).data("messageId");
+                visible: () => true,
+                onClick: (_event: PointerEvent, target: HTMLElement) => {
+                    const messageId = $(target).data("messageId");
                     const $message = $(
                         `#chat .chat-message[data-message-id="${messageId}"], #chat-popout .chat-message[data-message-id="${messageId}"]`,
                     );
@@ -198,10 +198,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 },
             },
             {
-                name: "ChatPins.UnpinMessage",
+                label: "ChatPins.UnpinMessage",
                 icon: '<i class="fas fa-thumbtack"></i>',
-                condition: (li) => {
-                    const messageId = $(li).data("messageId");
+                visible: (html: HTMLElement) => {
+                    const messageId = $(html).data("messageId");
                     if (!messageId) return false;
 
                     const message = game.messages.get(messageId);
@@ -218,9 +218,9 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                         this.#chatPins.isPinned(message)
                     );
                 },
-                callback: async (li) => {
+                onClick: async (_event: PointerEvent, target: HTMLElement) => {
                     const message = game.messages.get(
-                        li.dataset.messageId ?? "",
+                        target.dataset.messageId ?? "",
                     );
                     if (!message) return;
                     await this.#chatPins.unpin(message);
@@ -356,6 +356,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         options: object = {},
     ): Promise<void> {
         return this.#renderingQueue.add(
+            // @ts-expect-error Just ignore this
             this.#deleteMessage.bind(this),
             messageId,
             options,
@@ -365,6 +366,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     async postOne(message: ChatMessage, options = {}): Promise<void> {
         if (!message.visible) return;
         return this.#renderingQueue.add(
+            // @ts-expect-error Just ignore this
             this.#postOne.bind(this),
             message,
             options,
@@ -407,6 +409,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         const scroll = this.element.querySelector(".chat-scroll");
         if (!scroll) return;
         if (waitImages) {
+            // @ts-expect-error Just ignore this
             await ChatPinsLogV2.waitForImages(scroll as HTMLElement);
         }
         scroll.scrollTop = Number.MAX_SAFE_INTEGER;

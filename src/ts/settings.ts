@@ -39,7 +39,7 @@ class Settings {
     }
 
     get pinPermission(): number {
-        return game.settings.get(MODULE_ID, this.#PIN_PERMISSION) as number;
+        return game.settings.get(MODULE_ID, this.#PIN_PERMISSION) as unknown as number;
     }
 }
 

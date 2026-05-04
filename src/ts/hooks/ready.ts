@@ -2,7 +2,6 @@ import { libWrapper } from "@static/lib/shim.ts";
 import { ChatPins } from "../chat-pins.ts";
 import { MODULE_ID } from "../constants.ts";
 import { Listener } from "./index.ts";
-import { ChatMessages } from "@client/documents/collections/_module.mjs";
 
 const Ready: Listener = {
     listen(): void {
@@ -13,7 +12,7 @@ const Ready: Listener = {
             libWrapper.register(
                 MODULE_ID,
                 "foundry.documents.collections.ChatMessages.prototype.flush",
-                function (this: ChatMessages, _wrapper: any, ..._args: any) {
+                function (this: unknown, _wrapper: any, ..._args: any) {
                     const chatPins = new ChatPins();
                     chatPins.deleteAllExceptPins();
                 },

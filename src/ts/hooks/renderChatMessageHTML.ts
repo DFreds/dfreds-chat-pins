@@ -12,7 +12,7 @@ const RenderChatMessageHTML: Listener = {
             const $html = $(html);
 
             if (chatPins.isPinned(message)) {
-                const pinnedBy = game.i18n.format("ChatPins.PinnedBy", {
+                const pinnedBy = game.i18n.localize("ChatPins.PinnedBy", {
                     pinner: chatPins.pinner(message),
                 });
                 const pinnedByHtml = $(`<p>${pinnedBy}</p>`);
