@@ -8,7 +8,7 @@
         "PinMessage": "Fixar Mensagem",
         "UnpinMessage": "Desafixar Mensagem",
         "DeleteAllNote": "Note que isso não excluirá nenhuma mensagem fixada.",
-        "NoGmConnected": "Um Mestre deve estar conectado para fixar ou desafixar mensagens.",
+        "NoGmConnected": "Um Mestre deve estar conectado para fixar ou desafixar mensagens que você não possui.",
         "Setting": {
             "Player": "Jogador",
             "TrustedPlayer": "Jogador Confiável",

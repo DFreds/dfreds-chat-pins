@@ -8,7 +8,7 @@
         "PinMessage": "Pin Message",
         "UnpinMessage": "Unpin Message",
         "DeleteAllNote": "Note that this will not delete any pinned messages.",
-        "NoGmConnected": "A GM must be connected to pin or unpin messages.",
+        "NoGmConnected": "A GM must be connected to pin or unpin messages that you do not own.",
         "Setting": {
             "Player": "Player",
             "TrustedPlayer": "Trusted Player",
