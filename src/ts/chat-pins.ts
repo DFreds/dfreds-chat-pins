@@ -1,5 +1,6 @@
 import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
 import { MODULE_ID, PINNED_FLAG } from "./constants.ts";
+import { Settings } from "./settings.ts";
 import { getSockets } from "./sockets/sockets.ts";
 
 const { DialogV2 } = foundry.applications.api;
@@ -48,32 +49,77 @@ class ChatPins {
     }
 
     /**
-     * Pins the given message by requesting the GM to set the flag. This allows
-     * any user with permission to pin a message they do not own.
+     * Determines whether the current user is allowed to pin or unpin the given
+     * message.
+     *
+     * When socketlib is available, the pin/unpin is performed by a connected
+     * GM, so any user that meets the configured permission role can modify any
+     * message. When socketlib is unavailable, the user must additionally own
+     * the message in order to change its flags directly.
+     *
+     * @param message - the message to check
+     * @returns true if the current user can pin or unpin the message
+     */
+    canModify(message: ChatMessage): boolean {
+        const hasPermission = game.user.role >= new Settings().pinPermission;
+        if (!hasPermission) return false;
+
+        if (getSockets()) return true;
+
+        return message.testUserPermission(
+            game.user,
+            CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
+        );
+    }
+
+    /**
+     * Pins the given message.
+     *
+     * When socketlib is available, the request is routed through a connected GM
+     * so that any permitted user can pin a message they do not own. Otherwise,
+     * the flag is set directly, which requires the user to own the message.
      *
      * @param message - the message to pin
      * @returns promise that resolves when the request has been handled
      */
     async pin(message: ChatMessage): Promise<void> {
+        const sockets = getSockets();
+
+        if (!sockets) {
+            await message.setFlag(MODULE_ID, PINNED_FLAG, game.user.id);
+            return;
+        }
+
         if (!this.#requireActiveGm()) return;
 
-        await getSockets()?.emitPin({
+        await sockets.emitPin({
             messageId: message.id,
             userId: game.user.id,
         });
     }
 
     /**
-     * Unpins the given message by requesting the GM to unset the flag. This
-     * allows any user with permission to unpin a message they do not own.
+     * Unpins the given message.
+     *
+     * When socketlib is available, the request is routed through a connected GM
+     * so that any permitted user can unpin a message they do not own.
+     * Otherwise, the flag is unset directly, which requires the user to own the
+     * message.
      *
      * @param message - the message to unpin
      * @returns promise that resolves when the request has been handled
      */
     async unpin(message: ChatMessage): Promise<void> {
+        const sockets = getSockets();
+
+        if (!sockets) {
+            await message.unsetFlag(MODULE_ID, PINNED_FLAG);
+            return;
+        }
+
         if (!this.#requireActiveGm()) return;
 
-        await getSockets()?.emitUnpin({
+        await sockets.emitUnpin({
             messageId: message.id,
             userId: game.user.id,
         });

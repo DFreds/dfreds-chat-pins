@@ -15,10 +15,12 @@
     "packFolders": [],
     "relationships": {
         "systems": [],
-        "requires": [
+        "requires": [],
+        "recommends": [
             {
                 "id": "socketlib",
-                "type": "module"
+                "type": "module",
+                "reason": "Allows any user to pin any message by routing the request through a connected GM. Without it, users can only pin messages they own."
             }
         ]
     },

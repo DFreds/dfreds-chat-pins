@@ -1,5 +1,4 @@
 import { ChatPins } from "../chat-pins.ts";
-import { Settings } from "../settings.ts";
 import { Listener } from "./index.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 
@@ -10,7 +9,6 @@ const GetChatMessageContextOptions: Listener = {
     listen(): void {
         Hooks.on("getChatMessageContextOptions", (_chatLogApp, entries) => {
             const chatPins = new ChatPins();
-            const settings = new Settings();
 
             (entries as ContextMenuEntry[]).unshift(
                 {
@@ -24,7 +22,7 @@ const GetChatMessageContextOptions: Listener = {
                         if (!message) return false;
 
                         return (
-                            game.user.role >= settings.pinPermission &&
+                            chatPins.canModify(message) &&
                             !chatPins.isPinned(message)
                         );
                     },
@@ -49,7 +47,7 @@ const GetChatMessageContextOptions: Listener = {
                         if (!message) return false;
 
                         return (
-                            game.user.role >= settings.pinPermission &&
+                            chatPins.canModify(message) &&
                             chatPins.isPinned(message)
                         );
                     },

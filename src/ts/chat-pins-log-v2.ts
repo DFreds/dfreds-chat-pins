@@ -2,7 +2,6 @@ import {
     ApplicationClosingOptions,
     ApplicationConfiguration,
 } from "@client/applications/_types.mjs";
-import { Settings } from "./settings.ts";
 import { ChatPins } from "./chat-pins.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
@@ -14,13 +13,6 @@ const { ChatLog } = foundry.applications.sidebar.tabs;
 class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     ApplicationV2<ApplicationConfiguration, HandlebarsRenderOptions, object>,
 ) {
-    #settings: Settings;
-
-    constructor() {
-        super();
-        this.#settings = new Settings();
-    }
-
     static override DEFAULT_OPTIONS: DeepPartial<ApplicationConfiguration> = {
         id: "chat-pins",
         classes: [
@@ -211,7 +203,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     if (!message) return false;
 
                     return (
-                        game.user.role >= this.#settings.pinPermission &&
+                        this.#chatPins.canModify(message) &&
                         this.#chatPins.isPinned(message)
                     );
                 },
