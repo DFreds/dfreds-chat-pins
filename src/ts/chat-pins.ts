@@ -60,10 +60,10 @@ class ChatPins {
      */
     canModify(message: ChatMessage): boolean {
         const hasPermission = game.user.role >= new Settings().pinPermission;
-        return (
-            hasPermission &&
-            (this.#canRouteThroughGm() || this.#isOwner(message))
-        );
+        const isOwner = this.#isOwner(message);
+        const hasSockets = !!getSockets();
+
+        return (hasPermission && (isOwner || hasSockets));
     }
 
     /**
