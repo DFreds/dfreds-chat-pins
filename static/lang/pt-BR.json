@@ -7,6 +7,17 @@
         "JumpToPin": "Pular para Mensagem Fixada",
         "PinMessage": "Fixar Mensagem",
         "UnpinMessage": "Desafixar Mensagem",
-        "DeleteAllNote": "Note que isso não excluirá nenhuma mensagem fixada."
+        "DeleteAllNote": "Note que isso não excluirá nenhuma mensagem fixada.",
+        "NoGmConnected": "Um Mestre deve estar conectado para fixar ou desafixar mensagens.",
+        "Setting": {
+            "Player": "Jogador",
+            "TrustedPlayer": "Jogador Confiável",
+            "AssistantGM": "Assistente do Mestre",
+            "GameMaster": "Mestre",
+            "None": "Nenhum",
+
+            "PinPermissionName": "Permissão para Fixar",
+            "PinPermissionHint": "Define o nível mínimo necessário para fixar ou desafixar mensagens. A fixação é realizada através de um Mestre conectado, então usuários com este nível podem fixar qualquer mensagem, independentemente de quem a possui."
+        }
     }
 }

@@ -23,14 +23,8 @@ const GetChatMessageContextOptions: Listener = {
                         const message = game.messages.get(messageId);
                         if (!message) return false;
 
-                        const isOwner = message.testUserPermission(
-                            game.user,
-                            CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
-                        );
-
                         return (
                             game.user.role >= settings.pinPermission &&
-                            isOwner &&
                             !chatPins.isPinned(message)
                         );
                     },
@@ -54,14 +48,8 @@ const GetChatMessageContextOptions: Listener = {
                         const message = game.messages.get(messageId);
                         if (!message) return false;
 
-                        const isOwner = message.testUserPermission(
-                            game.user,
-                            CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
-                        );
-
                         return (
                             game.user.role >= settings.pinPermission &&
-                            isOwner &&
                             chatPins.isPinned(message)
                         );
                     },

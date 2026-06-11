@@ -210,14 +210,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     const message = game.messages.get(messageId);
                     if (!message) return false;
 
-                    const isOwner = message.testUserPermission(
-                        game.user,
-                        CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
-                    );
-
                     return (
                         game.user.role >= this.#settings.pinPermission &&
-                        isOwner &&
                         this.#chatPins.isPinned(message)
                     );
                 },

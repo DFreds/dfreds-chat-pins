@@ -1,11 +1,10 @@
 import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
-import { MODULE_ID } from "./constants.ts";
+import { MODULE_ID, PINNED_FLAG } from "./constants.ts";
+import { getSockets } from "./sockets/sockets.ts";
 
 const { DialogV2 } = foundry.applications.api;
 
 class ChatPins {
-    #FLAG = "pinned";
-
     /**
      * Adds the pin button to the chat sidebar element
      *
@@ -45,27 +44,54 @@ class ChatPins {
      * @returns true if the message is pinned
      */
     isPinned(message: ChatMessage): boolean {
-        return message.getFlag(MODULE_ID, this.#FLAG) !== undefined;
+        return message.getFlag(MODULE_ID, PINNED_FLAG) !== undefined;
     }
 
     /**
-     * Pins the given message
+     * Pins the given message by requesting the GM to set the flag. This allows
+     * any user with permission to pin a message they do not own.
      *
      * @param message - the message to pin
-     * @returns promise that resolves when the message flag is set
+     * @returns promise that resolves when the request has been handled
      */
-    pin(message: ChatMessage): Promise<ChatMessage> {
-        return message.setFlag(MODULE_ID, this.#FLAG, game.user.id);
+    async pin(message: ChatMessage): Promise<void> {
+        if (!this.#requireActiveGm()) return;
+
+        await getSockets()?.emitPin({
+            messageId: message.id,
+            userId: game.user.id,
+        });
     }
 
     /**
-     * Unpins the given message
+     * Unpins the given message by requesting the GM to unset the flag. This
+     * allows any user with permission to unpin a message they do not own.
      *
      * @param message - the message to unpin
-     * @returns promise that resolves when the message flag is unset
+     * @returns promise that resolves when the request has been handled
      */
-    unpin(message: ChatMessage): Promise<ChatMessage | undefined> {
-        return message.unsetFlag(MODULE_ID, this.#FLAG);
+    async unpin(message: ChatMessage): Promise<void> {
+        if (!this.#requireActiveGm()) return;
+
+        await getSockets()?.emitUnpin({
+            messageId: message.id,
+            userId: game.user.id,
+        });
+    }
+
+    /**
+     * Ensures a GM is connected to handle the socketed pin/unpin request,
+     * warning the user if not.
+     *
+     * @returns true if an active GM is connected
+     */
+    #requireActiveGm(): boolean {
+        if (!game.users.activeGM) {
+            ui.notifications.warn(game.i18n.localize("ChatPins.NoGmConnected"));
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -75,7 +101,7 @@ class ChatPins {
      * @returns the name of the user who pinned the message
      */
     pinner(message: ChatMessage): string {
-        const pinnerId = message.getFlag(MODULE_ID, this.#FLAG) as string;
+        const pinnerId = message.getFlag(MODULE_ID, PINNED_FLAG) as string;
         return (
             game.users.get(pinnerId)?.name ??
             game.i18n.localize("ChatPins.Unknown")
@@ -112,7 +138,7 @@ class ChatPins {
                     const notPinnedIds = game.messages
                         .filter(
                             (message: ChatMessage) =>
-                                !message.getFlag(MODULE_ID, this.#FLAG),
+                                !message.getFlag(MODULE_ID, PINNED_FLAG),
                         )
                         .map((message: ChatMessage) => message.id);
 

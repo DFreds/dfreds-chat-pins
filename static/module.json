@@ -15,7 +15,12 @@
     "packFolders": [],
     "relationships": {
         "systems": [],
-        "requires": []
+        "requires": [
+            {
+                "id": "socketlib",
+                "type": "module"
+            }
+        ]
     },
     "languages": [
         {
@@ -36,7 +41,7 @@
             "discord": "DFreds#1238"
         }
     ],
-    "socket": false,
+    "socket": true,
     "url": "https://github.com/DFreds/dfreds-chat-pins",
     "manifest": "https://github.com/DFreds/dfreds-chat-pins/releases/latest/download/module.json",
     "download": "https://github.com/DFreds/dfreds-chat-pins/releases/download/v1.0.0/dfreds-chat-pins.zip",
