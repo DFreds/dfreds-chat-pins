@@ -63,7 +63,7 @@ class ChatPins {
         const isOwner = this.#isOwner(message);
         const hasSockets = !!getSockets();
 
-        return (hasPermission && (isOwner || hasSockets));
+        return hasPermission && (isOwner || hasSockets);
     }
 
     /**
@@ -131,10 +131,7 @@ class ChatPins {
     }
 
     #isOwner(message: ChatMessage): boolean {
-        return message.testUserPermission(
-            game.user,
-            CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER,
-        );
+        return message.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
     }
 
     /**
@@ -145,10 +142,7 @@ class ChatPins {
      */
     pinner(message: ChatMessage): string {
         const pinnerId = message.getFlag(MODULE_ID, PINNED_FLAG) as string;
-        return (
-            game.users.get(pinnerId)?.name ??
-            game.i18n.localize("ChatPins.Unknown")
-        );
+        return game.users.get(pinnerId)?.name ?? game.i18n.localize("ChatPins.Unknown");
     }
 
     /**
@@ -172,17 +166,13 @@ class ChatPins {
             },
             yes: {
                 callback: async () => {
-                    const jumpToBottomElement =
-                        document.querySelector(".jump-to-bottom");
+                    const jumpToBottomElement = document.querySelector(".jump-to-bottom");
                     if (jumpToBottomElement) {
                         (jumpToBottomElement as HTMLElement).hidden = true;
                     }
 
                     const notPinnedIds = game.messages
-                        .filter(
-                            (message: ChatMessage) =>
-                                !message.getFlag(MODULE_ID, PINNED_FLAG),
-                        )
+                        .filter((message: ChatMessage) => !message.getFlag(MODULE_ID, PINNED_FLAG))
                         .map((message: ChatMessage) => message.id);
 
                     await ChatMessage.deleteDocuments(notPinnedIds);

@@ -7,18 +7,10 @@ class Settings {
     #PIN_PERMISSION = "pinPermission";
 
     constructor() {
-        this.#USER_ROLES[CONST.USER_ROLES.PLAYER] = game.i18n.localize(
-            "ChatPins.Setting.Player",
-        );
-        this.#USER_ROLES[CONST.USER_ROLES.TRUSTED] = game.i18n.localize(
-            "ChatPins.Setting.TrustedPlayer",
-        );
-        this.#USER_ROLES[CONST.USER_ROLES.ASSISTANT] = game.i18n.localize(
-            "ChatPins.Setting.AssistantGM",
-        );
-        this.#USER_ROLES[CONST.USER_ROLES.GAMEMASTER] = game.i18n.localize(
-            "ChatPins.Setting.GameMaster",
-        );
+        this.#USER_ROLES[CONST.USER_ROLES.PLAYER] = game.i18n.localize("ChatPins.Setting.Player");
+        this.#USER_ROLES[CONST.USER_ROLES.TRUSTED] = game.i18n.localize("ChatPins.Setting.TrustedPlayer");
+        this.#USER_ROLES[CONST.USER_ROLES.ASSISTANT] = game.i18n.localize("ChatPins.Setting.AssistantGM");
+        this.#USER_ROLES[CONST.USER_ROLES.GAMEMASTER] = game.i18n.localize("ChatPins.Setting.GameMaster");
         this.#USER_ROLES[5] = game.i18n.localize("ChatPins.Setting.None");
     }
 

@@ -21,10 +21,7 @@ const GetChatMessageContextOptions: Listener = {
                         const message = game.messages.get(messageId);
                         if (!message) return false;
 
-                        return (
-                            chatPins.canModify(message) &&
-                            !chatPins.isPinned(message)
-                        );
+                        return chatPins.canModify(message) && !chatPins.isPinned(message);
                     },
                     onClick: async (_event: PointerEvent, target: HTMLElement) => {
                         const messageId = $(target).data("messageId");
@@ -46,10 +43,7 @@ const GetChatMessageContextOptions: Listener = {
                         const message = game.messages.get(messageId);
                         if (!message) return false;
 
-                        return (
-                            chatPins.canModify(message) &&
-                            chatPins.isPinned(message)
-                        );
+                        return chatPins.canModify(message) && chatPins.isPinned(message);
                     },
                     onClick: async (_event: PointerEvent, target: HTMLElement) => {
                         const messageId = $(target).data("messageId");

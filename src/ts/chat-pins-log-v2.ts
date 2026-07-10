@@ -1,7 +1,4 @@
-import {
-    ApplicationClosingOptions,
-    ApplicationConfiguration,
-} from "@client/applications/_types.mjs";
+import { ApplicationClosingOptions, ApplicationConfiguration } from "@client/applications/_types.mjs";
 import { ChatPins } from "./chat-pins.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
@@ -15,14 +12,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 ) {
     static override DEFAULT_OPTIONS: DeepPartial<ApplicationConfiguration> = {
         id: "chat-pins",
-        classes: [
-            "tab",
-            "sidebar-tab",
-            "flexcol",
-            "chat-sidebar",
-            "active",
-            "sidebar-popout",
-        ],
+        classes: ["tab", "sidebar-tab", "flexcol", "chat-sidebar", "active", "sidebar-popout"],
         tag: "section",
         window: {
             icon: "fa-solid fa-thumbtack",
@@ -118,9 +108,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
      */
     #chatPins: ChatPins = new ChatPins();
 
-    protected override _configureRenderOptions(
-        options: HandlebarsRenderOptions,
-    ): void {
+    protected override _configureRenderOptions(options: HandlebarsRenderOptions): void {
         super._configureRenderOptions(options);
         // If the log has already been rendered once, prevent it from being re-rendered.
         if (this.rendered) {
@@ -139,9 +127,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         const log = this.element.querySelector(".chat-log");
 
         // Get the index of the last rendered chat message
-        let lastIdx = messages.findIndex(
-            (m: { id: string | null | undefined }) => m.id === this.#lastId,
-        );
+        let lastIdx = messages.findIndex((m: { id: string | null | undefined }) => m.id === this.#lastId);
         lastIdx = lastIdx > -1 ? lastIdx : messages.length;
         if (!lastIdx) {
             this.#renderingBatch = false;
@@ -202,15 +188,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     const message = game.messages.get(messageId);
                     if (!message) return false;
 
-                    return (
-                        this.#chatPins.canModify(message) &&
-                        this.#chatPins.isPinned(message)
-                    );
+                    return this.#chatPins.canModify(message) && this.#chatPins.isPinned(message);
                 },
                 onClick: async (_event: PointerEvent, target: HTMLElement) => {
-                    const message = game.messages.get(
-                        target.dataset.messageId ?? "",
-                    );
+                    const message = game.messages.get(target.dataset.messageId ?? "");
                     if (!message) return;
                     await this.#chatPins.unpin(message);
                     await this.render(); // ._renderHTML({}, {}); used to be _renderInner
@@ -221,16 +202,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         ];
     }
 
-    protected override async _onFirstRender(
-        context: object,
-        options: HandlebarsRenderOptions,
-    ): Promise<void> {
+    protected override async _onFirstRender(context: object, options: HandlebarsRenderOptions): Promise<void> {
         await super._onFirstRender(context, options);
 
-        setInterval(
-            this.updateTimestamps.bind(this),
-            ChatPinsLogV2.UPDATE_TIMESTAMP_FREQUENCY,
-        );
+        setInterval(this.updateTimestamps.bind(this), ChatPinsLogV2.UPDATE_TIMESTAMP_FREQUENCY);
 
         await this.renderBatch(CONFIG.ChatMessage.batchSize);
         await this.scrollBottom({ waitImages: true });
@@ -239,16 +214,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         // $(this.element).scroll(this.#onScrollLog.bind(this));
 
         // create context menu
-        this._createContextMenu(
-            this.#getEntryContextOptions,
-            ".message[data-message-id]",
-        );
+        this._createContextMenu(this.#getEntryContextOptions, ".message[data-message-id]");
     }
 
-    protected override async _onRender(
-        context: object,
-        options: HandlebarsRenderOptions,
-    ): Promise<void> {
+    protected override async _onRender(context: object, options: HandlebarsRenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         if (this.options.classes.includes("themed")) return;
@@ -259,10 +228,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         };
 
         if (colorScheme.interface) {
-            this.element.classList.add(
-                "themed",
-                `theme-${colorScheme.interface}`,
-            );
+            this.element.classList.add("themed", `theme-${colorScheme.interface}`);
         }
     }
 
@@ -293,10 +259,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         }
     }
 
-    _attachLogListeners(
-        element: HTMLElement,
-        _options: HandlebarsRenderOptions,
-    ): void {
+    _attachLogListeners(element: HTMLElement, _options: HandlebarsRenderOptions): void {
         // @ts-expect-error complaining about type
         element.addEventListener("scroll", this.#onScrollLog.bind(this), {
             passive: true,
@@ -313,8 +276,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
         event.preventDefault();
         const target = event.target as HTMLElement;
-        const { messageId } =
-            (target.closest("[data-message-id]") as HTMLElement)?.dataset ?? {};
+        const { messageId } = (target.closest("[data-message-id]") as HTMLElement)?.dataset ?? {};
         const message = game.messages.get(messageId ?? "");
         if (message) await message.delete();
         else await thisApp.deleteMessage(messageId ?? "");
@@ -322,9 +284,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
     async #onScrollLog(event?: UIEvent): Promise<void> {
         if (!this.rendered) return;
-        const log =
-            (event?.currentTarget as HTMLElement) ??
-            (this.element.querySelector(".chat-log") as HTMLElement);
+        const log = (event?.currentTarget as HTMLElement) ?? (this.element.querySelector(".chat-log") as HTMLElement);
 
         if (!log) return;
 
@@ -340,10 +300,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             });
     }
 
-    async deleteMessage(
-        messageId: string,
-        options: object = {},
-    ): Promise<void> {
+    async deleteMessage(messageId: string, options: object = {}): Promise<void> {
         return this.#renderingQueue.add(
             // @ts-expect-error Just ignore this
             this.#deleteMessage.bind(this),
@@ -368,22 +325,13 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         return this.#renderingQueue.add(this.#doRenderBatch.bind(this, size));
     }
 
-    async #rerenderMessage(
-        message: ChatMessage,
-        existing: HTMLElement,
-        options: object = {},
-    ) {
-        const expanded = Array.from(
-            existing.querySelectorAll('[data-action="expandRoll"]'),
-        ).map((el) => {
+    async #rerenderMessage(message: ChatMessage, existing: HTMLElement, options: object = {}) {
+        const expanded = Array.from(existing.querySelectorAll('[data-action="expandRoll"]')).map((el) => {
             return el.classList.contains("expanded");
         });
         const replacement = await ChatPinsLogV2.renderMessage(message, options);
-        const rolls = replacement.querySelectorAll(
-            '[data-action="expandRoll"]',
-        );
-        for (let i = 0; i < rolls.length; i++)
-            rolls[i].classList.toggle("expanded", expanded[i]);
+        const rolls = replacement.querySelectorAll('[data-action="expandRoll"]');
+        for (let i = 0; i < rolls.length; i++) rolls[i].classList.toggle("expanded", expanded[i]);
         existing.replaceWith(replacement);
     }
 
@@ -405,16 +353,12 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     async updateMessage(message: ChatMessage): Promise<void> {
-        const li = this.element.querySelector(
-            `.message[data-message-id="${message.id}"]`,
-        );
+        const li = this.element.querySelector(`.message[data-message-id="${message.id}"]`);
         if (li) await this.#rerenderMessage(message, li as HTMLElement);
         // A previously invisible message has become visible to this user.
         else {
             const messages = game.messages.contents;
-            const messageIndex = messages.findIndex(
-                (m: ChatMessage) => m === message,
-            );
+            const messageIndex = messages.findIndex((m: ChatMessage) => m === message);
             let nextMessage;
             for (let i = messageIndex + 1; i < messages.length; i++) {
                 if (messages[i].visible) {
@@ -430,22 +374,16 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     updateTimestamps(): void {
-        const messages = document.querySelectorAll(
-            "#chat-pins .chat-message[data-message-id]",
-        );
+        const messages = document.querySelectorAll("#chat-pins .chat-message[data-message-id]");
 
         if (!messages) return;
 
         for (const li of messages) {
-            const message = game.messages.get(
-                (li as HTMLElement).dataset.messageId ?? "",
-            );
+            const message = game.messages.get((li as HTMLElement).dataset.messageId ?? "");
             if (!message?.timestamp) return;
             const stamp = li.querySelector(".message-timestamp");
             if (stamp) {
-                stamp.textContent = foundry.utils.timeSince(
-                    message.timestamp as unknown as string,
-                );
+                stamp.textContent = foundry.utils.timeSince(message.timestamp as unknown as string);
             }
         }
     }
@@ -456,15 +394,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         if (message) message.logged = false;
 
         // Get the message's element
-        const li = this.element.querySelector(
-            `.message[data-message-id="${messageId}"]`,
-        );
+        const li = this.element.querySelector(`.message[data-message-id="${messageId}"]`);
         if (!li) return;
 
         if (messageId === this.#lastId) {
-            this.#lastId =
-                (li.nextElementSibling as HTMLElement)?.dataset.messageId ??
-                null;
+            this.#lastId = (li.nextElementSibling as HTMLElement)?.dataset.messageId ?? null;
         }
 
         // Remove the deleted message
@@ -492,9 +426,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         if (!before) {
             let newerMessage;
             for (let i = log.children.length; (i -= 1); ) {
-                const msg = game.messages.get(
-                    (log.children[i] as HTMLElement).dataset.messageId ?? "",
-                );
+                const msg = game.messages.get((log.children[i] as HTMLElement).dataset.messageId ?? "");
                 if (!msg) continue;
                 if (msg.timestamp <= message.timestamp) break;
                 newerMessage = msg;
@@ -503,11 +435,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         }
 
         // Append the message after some other one
-        const existing = before
-            ? this.element.querySelector(
-                  `.message[data-message-id="${before}"]`,
-              )
-            : null;
+        const existing = before ? this.element.querySelector(`.message[data-message-id="${before}"]`) : null;
         if (existing) existing.insertAdjacentElement("beforebegin", html);
         // Otherwise, append the message to the bottom of the log
         else {
@@ -518,20 +446,14 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         }
     }
 
-    static async renderMessage(
-        message: ChatMessage,
-        options = {},
-    ): Promise<HTMLElement> {
-        const hasGetHTML =
-            foundry.utils.getDefiningClass(message, "getHTML") !== ChatMessage;
+    static async renderMessage(message: ChatMessage, options = {}): Promise<HTMLElement> {
+        const hasGetHTML = foundry.utils.getDefiningClass(message, "getHTML") !== ChatMessage;
         if (!hasGetHTML) return message.renderHTML(options);
         // @ts-expect-error it exists, not typed
         const html = await message.getHTML(options);
         if (html instanceof HTMLElement) return html;
         if (html[0] instanceof HTMLElement) return html[0];
-        throw new Error(
-            `Unable to render ChatMessage [${message.id}] as it did not return an HTMLElement or jQuery.`,
-        );
+        throw new Error(`Unable to render ChatMessage [${message.id}] as it did not return an HTMLElement or jQuery.`);
     }
 }
 

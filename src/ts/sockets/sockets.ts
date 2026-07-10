@@ -69,9 +69,7 @@ class Sockets {
 
         const hasPermission = user.role >= this.#settings.pinPermission;
         if (!hasPermission) {
-            log(
-                `User ${userId} does not have permission to pin messages and was rejected`,
-            );
+            log(`User ${userId} does not have permission to pin messages and was rejected`);
         }
 
         return hasPermission;
