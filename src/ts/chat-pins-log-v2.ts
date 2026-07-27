@@ -293,11 +293,12 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         // this.#jumpToBottomElement.toggleAttribute("hidden", this.#isAtBottom);
         log.classList.toggle("scrolled", !this.#isAtBottom);
         const top = log.children[0] as HTMLElement;
-        if (pct < 0.01)
+        if (pct < 0.01) {
             return this.renderBatch(CONFIG.ChatMessage.batchSize).then(() => {
                 // Retain the scroll position at the top-most element before the extra messages were prepended to the log.
                 if (top) log.scrollTop = top.offsetTop;
             });
+        }
     }
 
     async deleteMessage(messageId: string, options: object = {}): Promise<void> {
@@ -354,11 +355,12 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
     async updateMessage(message: ChatMessage): Promise<void> {
         const li = this.element.querySelector(`.message[data-message-id="${message.id}"]`);
-        if (li) await this.#rerenderMessage(message, li as HTMLElement);
-        // A previously invisible message has become visible to this user.
-        else {
-            const messages = game.messages.contents;
-            const messageIndex = messages.findIndex((m: ChatMessage) => m === message);
+        if (li) {
+            await this.#rerenderMessage(message, li as HTMLElement);
+        } else {
+            // A previously invisible message has become visible to this user.
+            const messages = this.collection.contents;
+            const messageIndex = messages.findIndex((m: ChatMessage) => m.id === message.id);
             let nextMessage;
             for (let i = messageIndex + 1; i < messages.length; i++) {
                 if (messages[i].visible) {
@@ -425,7 +427,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         // Due to latency, a newer message might have been posted to the log. If so, place this message behind it.
         if (!before) {
             let newerMessage;
-            for (let i = log.children.length; (i -= 1); ) {
+            for (let i = log.children.length - 1; i >= 0; i--) {
                 const msg = game.messages.get((log.children[i] as HTMLElement).dataset.messageId ?? "");
                 if (!msg) continue;
                 if (msg.timestamp <= message.timestamp) break;
@@ -436,9 +438,10 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
         // Append the message after some other one
         const existing = before ? this.element.querySelector(`.message[data-message-id="${before}"]`) : null;
-        if (existing) existing.insertAdjacentElement("beforebegin", html);
-        // Otherwise, append the message to the bottom of the log
-        else {
+        if (existing) {
+            existing.insertAdjacentElement("beforebegin", html);
+        } else {
+            // Otherwise, append the message to the bottom of the log
             log.append(html);
             if (this.isAtBottom || message.author?._id === game.user._id) {
                 this.scrollBottom({ waitImages: true });
