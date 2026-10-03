@@ -1,3 +1,4 @@
+import { HotReload } from "./hot-reload.ts";
 import { Init } from "./init.ts";
 import { Ready } from "./ready.ts";
 import { RenderChatInput } from "./renderChatInput.ts";
@@ -15,6 +16,7 @@ interface Listener {
 const HooksChatPins = {
     listen(): void {
         const listeners: Listener[] = [
+            HotReload,
             Init,
             Setup,
             SocketlibReady,
