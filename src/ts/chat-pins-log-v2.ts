@@ -371,6 +371,14 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     async updateMessage(message: ChatMessage): Promise<void> {
+        return this.#renderingQueue.add(
+            // @ts-expect-error Just ignore this
+            this.#updateMessage.bind(this),
+            message,
+        );
+    }
+
+    async #updateMessage(message: ChatMessage): Promise<void> {
         const li = this.element.querySelector(`.message[data-message-id="${message.id}"]`);
         if (li) {
             await this.#rerenderMessage(message, li as HTMLElement);
@@ -385,10 +393,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     break;
                 }
             }
-            await this.postOne(message, {
-                before: nextMessage?.id,
-                notify: false,
-            });
+            await this.#postOne(message, { before: nextMessage?.id });
         }
     }
 
