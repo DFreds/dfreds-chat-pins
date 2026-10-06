@@ -26,7 +26,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         actions: {
             deleteMessage: ChatPinsLogV2.#onDeleteMessage,
             expandRoll: ChatPinsLogV2.#onExpandRoll,
-            // jumpToBottom: this.#onJumpToBottom,
         },
     };
 
@@ -63,11 +62,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     #isAtBottom: boolean = true;
-
-    /**
-     * The jump to bottom button.
-     */
-    // #jumpToBottomElement: HTMLButtonElement | null = null;
 
     /**
      * Track the ID of the oldest message displayed in the log.
@@ -180,9 +174,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         await this.renderBatch(CONFIG.ChatMessage.batchSize);
         await this.scrollBottom({ waitImages: true });
 
-        // // @ts-expect-error not sure why
-        // $(this.element).scroll(this.#onScrollLog.bind(this));
-
         this._createContextMenu(this.#getEntryContextOptions, ".message[data-message-id]", {
             hookName: "getChatMessageContextOptions",
             parentClassHooks: false,
@@ -209,20 +200,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         if (colorScheme.interface) {
             this.element.classList.add("themed", `theme-${colorScheme.interface}`);
         }
-    }
-
-    protected override async _preparePartContext(
-        partId: string,
-        context: object,
-        options: HandlebarsRenderOptions,
-    ): Promise<object> {
-        await super._preparePartContext(partId, context, options);
-        // switch (partId) {
-        //     case "input":
-        //         await this._prepareInputContext(context, options);
-        //         break;
-        // }
-        return context;
     }
 
     protected override _attachPartListeners(
@@ -276,7 +253,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
         const pct = log.scrollTop / (log.scrollHeight - log.clientHeight);
         this.#isAtBottom = pct > 0.99 || Number.isNaN(pct);
-        // this.#jumpToBottomElement.toggleAttribute("hidden", this.#isAtBottom);
         log.classList.toggle("scrolled", !this.#isAtBottom);
         const top = log.querySelector<HTMLElement>("li.message");
         if (pct < 0.01) {
