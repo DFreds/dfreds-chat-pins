@@ -25,6 +25,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         },
         actions: {
             deleteMessage: ChatPinsLogV2.#onDeleteMessage,
+            expandRoll: ChatPinsLogV2.#onExpandRoll,
             // jumpToBottom: this.#onJumpToBottom,
         },
     };
@@ -254,6 +255,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     protected override _onClose(options: ApplicationClosingOptions): void {
         super._onClose(options);
         this.#lastId = null;
+    }
+
+    static #onExpandRoll(event: Event, target: HTMLElement): void {
+        event.preventDefault();
+        target.classList.toggle("expanded");
     }
 
     static async #onDeleteMessage(event: Event): Promise<void> {
