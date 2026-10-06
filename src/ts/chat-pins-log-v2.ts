@@ -130,7 +130,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             try {
                 elements.push(await ChatPinsLogV2.renderMessage(message));
             } catch (err) {
-                console.error(err);
+                // @ts-expect-error Hooks.onError is not typed
+                Hooks.onError("ChatPinsLogV2##doRenderBatch", err, {
+                    msg: `Chat message ${message.id} failed to render`,
+                    log: "error",
+                });
             }
         }
 
@@ -343,7 +347,9 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         });
         const replacement = await ChatPinsLogV2.renderMessage(message, options);
         const rolls = replacement.querySelectorAll('[data-action="expandRoll"]');
-        for (let i = 0; i < rolls.length; i++) rolls[i].classList.toggle("expanded", expanded[i]);
+        for (let i = 0; i < rolls.length; i++) rolls[i].classList.toggle("expanded", expanded[i] ?? false);
+        replacement.hidden = existing.hidden;
+        replacement.style.opacity = existing.style.opacity;
         existing.replaceWith(replacement);
     }
 
