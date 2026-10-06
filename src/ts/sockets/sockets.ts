@@ -87,5 +87,4 @@ function getSockets(): Sockets | undefined {
     return sockets;
 }
 
-export { Sockets, initSockets, getSockets };
-export type { PinMessageData };
+export { initSockets, getSockets };
