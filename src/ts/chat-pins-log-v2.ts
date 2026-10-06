@@ -250,6 +250,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         element.addEventListener("scroll", this.#onScrollLog.bind(this), {
             passive: true,
         });
+        element.addEventListener("change", this.#onChangeLog.bind(this));
     }
 
     protected override _onClose(options: ApplicationClosingOptions): void {
@@ -290,6 +291,19 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 if (top) log.scrollTop = top.offsetTop;
             });
         }
+    }
+
+    #onChangeLog(event: Event): void {
+        const target = event.target as HTMLElement;
+        if (!foundry.utils.isElementInstanceOf(target, foundry.applications.elements.HTMLSecretBlockElement)) return;
+        const messageId = (target.closest("[data-message-id]") as HTMLElement | null)?.dataset.messageId;
+        if (!messageId) return;
+        const message = game.messages.get(messageId);
+        if (!message) return;
+        const modified = (target as foundry.applications.elements.HTMLSecretBlockElement).toggleRevealed(
+            message.content,
+        );
+        message.update({ content: modified });
     }
 
     async deleteMessage(messageId: string, options: object = {}): Promise<void> {
