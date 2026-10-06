@@ -183,6 +183,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     protected override async _onFirstRender(context: object, options: HandlebarsRenderOptions): Promise<void> {
         await super._onFirstRender(context, options);
 
+        this.#matchCoreLogClasses();
         setInterval(this.updateTimestamps.bind(this), ChatPinsLogV2.UPDATE_TIMESTAMP_FREQUENCY);
 
         await this.renderBatch(CONFIG.ChatMessage.batchSize);
@@ -193,6 +194,12 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
         // create context menu
         this._createContextMenu(this.#getEntryContextOptions, ".message[data-message-id]");
+    }
+
+    #matchCoreLogClasses(): void {
+        const coreLog = ui.chat.element?.querySelector(".chat-log");
+        const log = this.element.querySelector(".chat-log");
+        if (coreLog && log) log.className = coreLog.className;
     }
 
     protected override async _onRender(context: object, options: HandlebarsRenderOptions): Promise<void> {
