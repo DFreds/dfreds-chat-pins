@@ -12,6 +12,11 @@ interface PinMessageData {
      * The id of the user who requested the pin or unpin
      */
     userId: string;
+
+    /**
+     * Whether to pin or unpin the message
+     */
+    pinned: boolean;
 }
 
 class Sockets {
@@ -21,38 +26,23 @@ class Sockets {
     constructor() {
         this.#settings = new Settings();
         this.#socket = socketlib.registerModule(MODULE_ID);
-        this.#socket.register("pin", this.#onPin.bind(this));
-        this.#socket.register("unpin", this.#onUnpin.bind(this));
+        this.#socket.register("setPinned", this.#onSetPinned.bind(this));
     }
 
-    async emitPin(message: PinMessageData): Promise<void> {
-        await this.#socket.executeAsGM("pin", message);
+    async emitSetPinned(data: PinMessageData): Promise<void> {
+        await this.#socket.executeAsGM("setPinned", data);
     }
 
-    async #onPin({ messageId, userId }: PinMessageData): Promise<void> {
+    async #onSetPinned({ messageId, userId, pinned }: PinMessageData): Promise<void> {
         if (!this.#canUserPin(userId)) return;
 
         const message = game.messages.get(messageId);
         if (!message) return;
 
-        await message.setFlag(MODULE_ID, PINNED_FLAG, userId);
+        if (pinned) await message.setFlag(MODULE_ID, PINNED_FLAG, userId);
+        else await message.unsetFlag(MODULE_ID, PINNED_FLAG);
 
-        log(`Pinned message ${messageId} on behalf of user ${userId}`);
-    }
-
-    async emitUnpin(message: PinMessageData): Promise<void> {
-        await this.#socket.executeAsGM("unpin", message);
-    }
-
-    async #onUnpin({ messageId, userId }: PinMessageData): Promise<void> {
-        if (!this.#canUserPin(userId)) return;
-
-        const message = game.messages.get(messageId);
-        if (!message) return;
-
-        await message.unsetFlag(MODULE_ID, PINNED_FLAG);
-
-        log(`Unpinned message ${messageId} on behalf of user ${userId}`);
+        log(`${pinned ? "Pinned" : "Unpinned"} message ${messageId} on behalf of user ${userId}`);
     }
 
     /**
