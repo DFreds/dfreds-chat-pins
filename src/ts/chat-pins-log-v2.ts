@@ -441,13 +441,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     static async renderMessage(message: ChatMessage, options = {}): Promise<HTMLElement> {
-        const hasGetHTML = foundry.utils.getDefiningClass(message, "getHTML") !== ChatMessage;
-        if (!hasGetHTML) return message.renderHTML(options);
-        // @ts-expect-error it exists, not typed
-        const html = await message.getHTML(options);
-        if (html instanceof HTMLElement) return html;
-        if (html[0] instanceof HTMLElement) return html[0];
-        throw new Error(`Unable to render ChatMessage [${message.id}] as it did not return an HTMLElement or jQuery.`);
+        return ChatLog.renderMessage(message, options);
     }
 }
 
