@@ -8,20 +8,18 @@ const RenderChatMessageHTML: Listener = {
     listen(): void {
         Hooks.on("renderChatMessageHTML", (m, html, _data) => {
             const message = m as ChatMessage;
+            const element = html as unknown as HTMLElement;
             const chatPins = new ChatPins();
-            const $html = $(html);
 
             if (chatPins.isPinned(message)) {
                 const pinnedBy = game.i18n.localize("ChatPins.PinnedBy", {
                     pinner: chatPins.pinner(message),
                 });
-                const pinnedByHtml = $(`<p>${pinnedBy}</p>`);
 
-                $html.css("border", "2px solid #ff6400");
-                const messageHeader = $html.find(".message-header");
-                pinnedByHtml.insertAfter(messageHeader);
+                element.style.border = "2px solid #ff6400";
+                element.querySelector(".message-header")?.insertAdjacentHTML("afterend", `<p>${pinnedBy}</p>`);
             } else {
-                $html.css("border", "");
+                element.style.border = "";
             }
         });
     },

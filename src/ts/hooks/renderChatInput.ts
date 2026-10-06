@@ -10,7 +10,7 @@ const RenderChatInput = {
             const chatLogTyped = chatLog as ChatLog;
 
             const chatPins = new ChatPins();
-            chatPins.addPinButton($(chatLogTyped.element));
+            chatPins.addPinButton(chatLogTyped.element);
         });
     },
 };

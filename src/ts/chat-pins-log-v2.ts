@@ -146,23 +146,21 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 icon: '<i class="fas fa-bullseye"></i>',
                 visible: () => true,
                 onClick: (_event: PointerEvent, target: HTMLElement) => {
-                    const messageId = $(target).data("messageId");
-                    const $message = $(
+                    const messageId = target.dataset.messageId;
+                    const messages = document.querySelectorAll(
                         `#chat .chat-message[data-message-id="${messageId}"], #chat-popout .chat-message[data-message-id="${messageId}"]`,
                     );
 
-                    $message.each((_index, element) => {
-                        (element as HTMLElement).scrollIntoView({
-                            behavior: "smooth",
-                        });
-                    });
+                    for (const message of messages) {
+                        message.scrollIntoView({ behavior: "smooth" });
+                    }
                 },
             },
             {
                 label: "ChatPins.UnpinMessage",
                 icon: '<i class="fas fa-thumbtack"></i>',
                 visible: (html: HTMLElement) => {
-                    const messageId = $(html).data("messageId");
+                    const messageId = html.dataset.messageId;
                     if (!messageId) return false;
 
                     const message = game.messages.get(messageId);

@@ -11,30 +11,24 @@ class ChatPins {
      *
      * @param chatHtml - the html for the chat input
      */
-    addPinButton(chatHtml: JQuery<HTMLElement>): void {
-        // Check if pin button already exists
-        if (chatHtml.find('button[data-action="chat-pins"]').length > 0) {
-            return;
+    addPinButton(chatHtml: HTMLElement): void {
+        if (chatHtml.querySelector('button[data-action="chat-pins"]')) return;
+
+        const pinButton = document.createElement("button");
+        pinButton.type = "button";
+        pinButton.className = "ui-control icon fa-solid fa-thumbtack";
+        pinButton.dataset.tooltip = "ChatPins.ChatPins";
+        pinButton.dataset.action = "chat-pins";
+        pinButton.ariaLabel = game.i18n.localize("ChatPins.ChatPins");
+        pinButton.addEventListener("click", () => new ChatPinsLogV2().render(true));
+
+        let controlButtons = chatHtml.querySelector("#chat-controls .control-buttons");
+        if (!controlButtons) {
+            controlButtons = document.createElement("div");
+            controlButtons.className = "control-buttons";
+            chatHtml.querySelector("#chat-controls")?.append(controlButtons);
         }
-
-        const pinButton = $(
-            `<button type="button" class="ui-control icon fa-solid fa-thumbtack" data-tooltip="ChatPins.ChatPins" aria-label="${game.i18n.localize("ChatPins.ChatPins")}" data-action="chat-pins"></button>`,
-        );
-        pinButton.on("click", async () => {
-            new ChatPinsLogV2().render(true);
-        });
-
-        const controlButtons = chatHtml.find("#chat-controls .control-buttons");
-
-        if (controlButtons.length > 0) {
-            controlButtons.prepend(pinButton);
-        } else {
-            // Chat controls > control-buttons are not present, so create them
-            const chatControls = chatHtml.find("#chat-controls");
-            const controlButtonsDiv = $('<div class="control-buttons"></div>');
-            chatControls.append(controlButtonsDiv);
-            controlButtonsDiv.append(pinButton);
-        }
+        controlButtons.prepend(pinButton);
     }
 
     /**
