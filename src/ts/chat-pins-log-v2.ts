@@ -166,27 +166,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                     }
                 },
             },
-            {
-                label: "ChatPins.UnpinMessage",
-                icon: '<i class="fas fa-thumbtack"></i>',
-                visible: (html: HTMLElement) => {
-                    const messageId = html.dataset.messageId;
-                    if (!messageId) return false;
-
-                    const message = game.messages.get(messageId);
-                    if (!message) return false;
-
-                    return this.#chatPins.canModify(message) && this.#chatPins.isPinned(message);
-                },
-                onClick: async (_event: PointerEvent, target: HTMLElement) => {
-                    const message = game.messages.get(target.dataset.messageId ?? "");
-                    if (!message) return;
-                    await this.#chatPins.unpin(message);
-                    await this.render(); // ._renderHTML({}, {}); used to be _renderInner
-                },
-            },
             // @ts-expect-error Not the best, but easiest way to get options from foundry
-            ...ChatLog.prototype._getEntryContextOptions(),
+            ...ChatLog.prototype._getEntryContextOptions.call(this),
         ];
     }
 
@@ -202,8 +183,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         // // @ts-expect-error not sure why
         // $(this.element).scroll(this.#onScrollLog.bind(this));
 
-        // create context menu
-        this._createContextMenu(this.#getEntryContextOptions, ".message[data-message-id]");
+        this._createContextMenu(this.#getEntryContextOptions, ".message[data-message-id]", {
+            hookName: "getChatMessageContextOptions",
+            parentClassHooks: false,
+            fixed: true,
+        });
     }
 
     #matchCoreLogClasses(): void {
