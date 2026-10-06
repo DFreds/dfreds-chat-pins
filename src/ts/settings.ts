@@ -1,18 +1,10 @@
 import { MODULE_ID } from "./constants.ts";
 
-class Settings {
-    #USER_ROLES: Record<number, string> = {};
+const NO_ONE_ROLE = CONST.USER_ROLES.GAMEMASTER + 1;
 
+class Settings {
     // Settings keys
     #PIN_PERMISSION = "pinPermission";
-
-    constructor() {
-        this.#USER_ROLES[CONST.USER_ROLES.PLAYER] = game.i18n.localize("ChatPins.Setting.Player");
-        this.#USER_ROLES[CONST.USER_ROLES.TRUSTED] = game.i18n.localize("ChatPins.Setting.TrustedPlayer");
-        this.#USER_ROLES[CONST.USER_ROLES.ASSISTANT] = game.i18n.localize("ChatPins.Setting.AssistantGM");
-        this.#USER_ROLES[CONST.USER_ROLES.GAMEMASTER] = game.i18n.localize("ChatPins.Setting.GameMaster");
-        this.#USER_ROLES[5] = game.i18n.localize("ChatPins.Setting.None");
-    }
 
     register(): void {
         this.#registerPinPermission();
@@ -25,7 +17,13 @@ class Settings {
             scope: "world",
             config: true,
             default: CONST.USER_ROLES.GAMEMASTER,
-            choices: this.#USER_ROLES,
+            choices: {
+                [CONST.USER_ROLES.PLAYER]: game.i18n.localize("ChatPins.Setting.Player"),
+                [CONST.USER_ROLES.TRUSTED]: game.i18n.localize("ChatPins.Setting.TrustedPlayer"),
+                [CONST.USER_ROLES.ASSISTANT]: game.i18n.localize("ChatPins.Setting.AssistantGM"),
+                [CONST.USER_ROLES.GAMEMASTER]: game.i18n.localize("ChatPins.Setting.GameMaster"),
+                [NO_ONE_ROLE]: game.i18n.localize("ChatPins.Setting.None"),
+            },
             type: String,
         });
     }
