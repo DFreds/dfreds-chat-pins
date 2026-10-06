@@ -72,22 +72,7 @@ class ChatPins {
      * @returns promise that resolves when the request has been handled
      */
     async pin(message: ChatMessage): Promise<void> {
-        if (this.#isOwner(message)) {
-            await message.setFlag(MODULE_ID, PINNED_FLAG, game.user.id);
-            return;
-        }
-
-        const sockets = getSockets();
-        if (!sockets) return;
-
-        if (this.#canRouteThroughGm()) {
-            await sockets.emitPin({
-                messageId: message.id,
-                userId: game.user.id,
-            });
-        } else {
-            ui.notifications.warn(game.i18n.localize("ChatPins.NoGmConnected"));
-        }
+        await this.#setPinned(message, true);
     }
 
     /**
@@ -102,26 +87,27 @@ class ChatPins {
      * @returns promise that resolves when the request has been handled
      */
     async unpin(message: ChatMessage): Promise<void> {
+        await this.#setPinned(message, false);
+    }
+
+    async #setPinned(message: ChatMessage, pinned: boolean): Promise<void> {
         if (this.#isOwner(message)) {
-            await message.unsetFlag(MODULE_ID, PINNED_FLAG);
+            if (pinned) await message.setFlag(MODULE_ID, PINNED_FLAG, game.user.id);
+            else await message.unsetFlag(MODULE_ID, PINNED_FLAG);
             return;
         }
 
         const sockets = getSockets();
         if (!sockets) return;
 
-        if (this.#canRouteThroughGm()) {
-            await sockets.emitUnpin({
-                messageId: message.id,
-                userId: game.user.id,
-            });
-        } else {
+        if (!game.users.activeGM) {
             ui.notifications.warn(game.i18n.localize("ChatPins.NoGmConnected"));
+            return;
         }
-    }
 
-    #canRouteThroughGm(): boolean {
-        return !!getSockets() && !!game.users.activeGM;
+        const data = { messageId: message.id, userId: game.user.id };
+        if (pinned) await sockets.emitPin(data);
+        else await sockets.emitUnpin(data);
     }
 
     #isOwner(message: ChatMessage): boolean {
