@@ -1,5 +1,5 @@
 import { ChatPins } from "../chat-pins.ts";
-import { findChatPinsLogApp } from "../foundry-helpers.ts";
+import { ChatPinsLogV2 } from "../chat-pins-log-v2.ts";
 import { Listener } from "./index.ts";
 
 /**
@@ -10,7 +10,7 @@ const UpdateChatMessage: Listener = {
         Hooks.on("updateChatMessage", (m, _update, _data) => {
             const message = m as ChatMessage;
             const chatPins = new ChatPins();
-            const app = findChatPinsLogApp();
+            const app = foundry.applications.instances.get("chat-pins") as ChatPinsLogV2 | undefined;
 
             if (!app) return;
 
