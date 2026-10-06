@@ -104,6 +104,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
      * @returns
      */
     async #doRenderBatch(size: number): Promise<void> {
+        if (!this.rendered) {
+            this.#renderingBatch = false;
+            return;
+        }
+
         const messages = this.collection.contents;
         const log = this.element.querySelector(".chat-log");
 
@@ -397,6 +402,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     #deleteMessage(messageId: string, _options: object = {}): void {
+        if (!this.rendered) return;
+
         // Get the chat message being removed from the log
         const message = game.messages.get(messageId);
         if (message) message.logged = false;
@@ -421,6 +428,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     async #postOne(message: ChatMessage, { before }: { before?: string }) {
+        if (!this.rendered || !message.visible) return;
         message.logged = true;
 
         // Track internal flags
