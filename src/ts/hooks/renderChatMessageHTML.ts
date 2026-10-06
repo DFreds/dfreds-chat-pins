@@ -11,16 +11,16 @@ const RenderChatMessageHTML: Listener = {
             const element = html as unknown as HTMLElement;
             const chatPins = new ChatPins();
 
-            if (chatPins.isPinned(message)) {
-                const pinnedBy = game.i18n.localize("ChatPins.PinnedBy", {
-                    pinner: chatPins.pinner(message),
-                });
+            if (!chatPins.isPinned(message)) return;
 
-                element.style.border = "2px solid #ff6400";
-                element.querySelector(".message-header")?.insertAdjacentHTML("afterend", `<p>${pinnedBy}</p>`);
-            } else {
-                element.style.border = "";
-            }
+            const pinnedBy = game.i18n.localize("ChatPins.PinnedBy", {
+                pinner: chatPins.pinner(message),
+            });
+
+            element.classList.add("chat-pins-pinned");
+            element
+                .querySelector(".message-header")
+                ?.insertAdjacentHTML("afterend", `<p class="chat-pins-pinned-by">${pinnedBy}</p>`);
         });
     },
 };

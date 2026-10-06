@@ -1,3 +1,7 @@
 #chat-pins .window-content {
     padding: 0;
 }
+
+.chat-message.chat-pins-pinned {
+    border: 2px solid var(--chat-pins-pinned-color, #ff6400) !important;
+}
