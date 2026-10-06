@@ -24,7 +24,7 @@ class Settings {
                 [CONST.USER_ROLES.GAMEMASTER]: game.i18n.localize("ChatPins.Setting.GameMaster"),
                 [NO_ONE_ROLE]: game.i18n.localize("ChatPins.Setting.None"),
             },
-            type: String,
+            type: Number,
         });
     }
 
