@@ -15,49 +15,33 @@ const GetChatMessageContextOptions: Listener = {
                     label: "ChatPins.PinMessage",
                     icon: '<i class="fas fa-thumbtack"></i>',
                     visible: (html: HTMLElement) => {
-                        const messageId = $(html).data("messageId");
-                        if (!messageId) return false;
-
-                        const message = game.messages.get(messageId);
-                        if (!message) return false;
-
-                        return chatPins.canModify(message) && !chatPins.isPinned(message);
+                        const message = messageFrom(html);
+                        return !!message && chatPins.canModify(message) && !chatPins.isPinned(message);
                     },
                     onClick: async (_event: PointerEvent, target: HTMLElement) => {
-                        const messageId = $(target).data("messageId");
-                        if (!messageId) return;
-
-                        const message = game.messages.get(messageId);
-                        if (!message) return;
-
-                        await chatPins.pin(message);
+                        const message = messageFrom(target);
+                        if (message) await chatPins.pin(message);
                     },
                 },
                 {
                     label: "ChatPins.UnpinMessage",
                     icon: '<i class="fas fa-thumbtack"></i>',
                     visible: (html: HTMLElement) => {
-                        const messageId = $(html).data("messageId");
-                        if (!messageId) return false;
-
-                        const message = game.messages.get(messageId);
-                        if (!message) return false;
-
-                        return chatPins.canModify(message) && chatPins.isPinned(message);
+                        const message = messageFrom(html);
+                        return !!message && chatPins.canModify(message) && chatPins.isPinned(message);
                     },
                     onClick: async (_event: PointerEvent, target: HTMLElement) => {
-                        const messageId = $(target).data("messageId");
-                        if (!messageId) return;
-
-                        const message = game.messages.get(messageId);
-                        if (!message) return;
-
-                        await chatPins.unpin(message);
+                        const message = messageFrom(target);
+                        if (message) await chatPins.unpin(message);
                     },
                 },
             );
         });
     },
 };
+
+function messageFrom(element: HTMLElement): ChatMessage | undefined {
+    return game.messages.get(element.dataset.messageId ?? "");
+}
 
 export { GetChatMessageContextOptions };
