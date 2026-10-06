@@ -276,7 +276,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
 
     async #onScrollLog(event?: UIEvent): Promise<void> {
         if (!this.rendered) return;
-        const log = (event?.currentTarget as HTMLElement) ?? (this.element.querySelector(".chat-log") as HTMLElement);
+        const log =
+            (event?.currentTarget as HTMLElement) ?? (this.element.querySelector(".chat-scroll") as HTMLElement);
 
         if (!log) return;
 
@@ -284,7 +285,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         this.#isAtBottom = pct > 0.99 || Number.isNaN(pct);
         // this.#jumpToBottomElement.toggleAttribute("hidden", this.#isAtBottom);
         log.classList.toggle("scrolled", !this.#isAtBottom);
-        const top = log.children[0] as HTMLElement;
+        const top = log.querySelector<HTMLElement>("li.message");
         if (pct < 0.01) {
             return this.renderBatch(CONFIG.ChatMessage.batchSize).then(() => {
                 // Retain the scroll position at the top-most element before the extra messages were prepended to the log.
