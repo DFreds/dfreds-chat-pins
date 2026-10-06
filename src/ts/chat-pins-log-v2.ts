@@ -2,7 +2,6 @@ import { ApplicationClosingOptions, ApplicationConfiguration } from "@client/app
 import { ChatPins } from "./chat-pins.ts";
 import { ContextMenuEntry } from "@client/applications/ux/context-menu.mjs";
 import { HandlebarsRenderOptions } from "@client/applications/api/handlebars-application.mjs";
-import { ChatMessageSource } from "@common/documents/chat-message.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const { ChatLog } = foundry.applications.sidebar.tabs;
@@ -49,26 +48,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     get collection(): foundry.documents.collections.ChatMessages {
         const pinnedMessages = game.messages
             .filter((message: ChatMessage) => this.#chatPins.isPinned(message))
-            .map((message: ChatMessage) => {
-                return {
-                    _id: message._id,
-                    type: message.type,
-                    system: message.system,
-                    style: message.style,
-                    author: message?.author?.id,
-                    timestamp: message.timestamp,
-                    flavor: message.flavor,
-                    content: message.content,
-                    speaker: message.speaker,
-                    whisper: message.whisper,
-                    blind: message.blind,
-                    rolls: message.rolls.map((roll) => JSON.stringify(roll)),
-                    sound: message.sound,
-                    emote: message.emote,
-                    flags: message.flags,
-                    _stats: message._stats,
-                } as ChatMessageSource;
-            });
+            .map((message: ChatMessage) => message.toObject());
 
         // @ts-expect-error Just ignore this
         return new foundry.documents.collections.ChatMessages(pinnedMessages);
