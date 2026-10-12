@@ -20,7 +20,9 @@ class ChatPins {
         pinButton.dataset.tooltip = "ChatPins.ChatPins";
         pinButton.dataset.action = "chat-pins";
         pinButton.ariaLabel = game.i18n.localize("ChatPins.ChatPins");
-        pinButton.addEventListener("click", () => new ChatPinsLogV2().render(true));
+        pinButton.addEventListener("click", () =>
+            (foundry.applications.instances.get("chat-pins") ?? new ChatPinsLogV2()).render(true),
+        );
 
         let controlButtons = chatHtml.querySelector("#chat-controls .control-buttons");
         if (!controlButtons) {
