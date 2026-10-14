@@ -133,7 +133,7 @@ class ChatPins {
      * @returns a promise that resolves when the dialog is finished
      */
     deleteAllExceptPins(): Promise<any> {
-        const question = game.i18n.localize("AreYouSure");
+        const question = game.i18n.localize("COMMON.AreYouSure");
         const warning = game.i18n.localize("CHAT.FlushWarning");
         const deleteAllNote = game.i18n.localize("ChatPins.DeleteAllNote");
 
