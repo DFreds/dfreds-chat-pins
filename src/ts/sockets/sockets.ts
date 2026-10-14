@@ -9,11 +9,6 @@ interface PinMessageData {
     messageId: string;
 
     /**
-     * The id of the user who requested the pin or unpin
-     */
-    userId: string;
-
-    /**
      * Whether to pin or unpin the message
      */
     pinned: boolean;
@@ -26,14 +21,17 @@ class Sockets {
     constructor() {
         this.#settings = new Settings();
         this.#socket = socketlib.registerModule(MODULE_ID);
-        this.#socket.register("setPinned", this.#onSetPinned.bind(this));
+        const onSetPinned = this.#onSetPinned.bind(this);
+        this.#socket.register("setPinned", function (this: { socketdata: { userId: string } }, data: PinMessageData) {
+            return onSetPinned(this.socketdata.userId, data);
+        });
     }
 
     async emitSetPinned(data: PinMessageData): Promise<void> {
         await this.#socket.executeAsGM("setPinned", data);
     }
 
-    async #onSetPinned({ messageId, userId, pinned }: PinMessageData): Promise<void> {
+    async #onSetPinned(userId: string, { messageId, pinned }: PinMessageData): Promise<void> {
         if (!this.#canUserPin(userId)) return;
 
         const message = game.messages.get(messageId);

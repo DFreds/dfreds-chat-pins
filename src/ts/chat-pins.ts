@@ -107,7 +107,7 @@ class ChatPins {
             return;
         }
 
-        await sockets.emitSetPinned({ messageId: message.id, userId: game.user.id, pinned });
+        await sockets.emitSetPinned({ messageId: message.id, pinned });
     }
 
     #isOwner(message: ChatMessage): boolean {
