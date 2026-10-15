@@ -1,5 +1,5 @@
 import { ChatPins } from "../chat-pins.ts";
-import { ChatLog } from "@client/applications/sidebar/tabs/_module.mjs";
+import type { ChatLog } from "@client/applications/sidebar/tabs/_module.mjs";
 import { Listener } from "./index.ts";
 
 /**
