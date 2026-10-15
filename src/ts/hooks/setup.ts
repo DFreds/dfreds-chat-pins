@@ -18,8 +18,7 @@ const Setup: Listener = {
                 MODULE_ID,
                 "foundry.documents.collections.ChatMessages.prototype.flush",
                 function (this: unknown, _wrapper: any, ..._args: any) {
-                    const chatPins = new ChatPins();
-                    chatPins.deleteAllExceptPins();
+                    return new ChatPins().deleteAllExceptPins();
                 },
                 "OVERRIDE",
             );
