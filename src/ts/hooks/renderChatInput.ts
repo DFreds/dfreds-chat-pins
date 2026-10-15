@@ -1,10 +1,11 @@
 import { ChatPins } from "../chat-pins.ts";
 import { ChatLog } from "@client/applications/sidebar/tabs/_module.mjs";
+import { Listener } from "./index.ts";
 
 /**
  * Handle adding pin button to chat buttons
  */
-const RenderChatInput = {
+const RenderChatInput: Listener = {
     listen(): void {
         Hooks.on("renderChatInput", (chatLog, _data, _metadata) => {
             const chatLogTyped = chatLog as ChatLog;
