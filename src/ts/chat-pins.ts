@@ -2,6 +2,7 @@ import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
 import { MODULE_ID, PINNED_FLAG } from "./constants.ts";
 import { Settings } from "./settings.ts";
 import { getSockets } from "./sockets/sockets.ts";
+import { error } from "./logger.ts";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -152,10 +153,14 @@ class ChatPins {
                     }
 
                     const notPinnedIds = game.messages
-                        .filter((message: ChatMessage) => !message.getFlag(MODULE_ID, PINNED_FLAG))
+                        .filter((message: ChatMessage) => !this.isPinned(message))
                         .map((message: ChatMessage) => message.id);
 
-                    await ChatMessage.deleteDocuments(notPinnedIds);
+                    try {
+                        await ChatMessage.deleteDocuments(notPinnedIds);
+                    } catch (e) {
+                        error(`Failed to delete messages: ${e}`);
+                    }
                 },
             },
         });
