@@ -1,6 +1,5 @@
 import { HotReload } from "./hot-reload.ts";
 import { Init } from "./init.ts";
-import { Ready } from "./ready.ts";
 import { RenderChatInput } from "./renderChatInput.ts";
 import { UpdateChatMessage } from "./updateChatMessage.ts";
 import { DeleteChatMessage } from "./deleteChatMessage.ts";
@@ -20,7 +19,6 @@ const HooksChatPins = {
             Init,
             Setup,
             SocketlibReady,
-            Ready,
             RenderChatMessageHTML,
             RenderChatInput,
             UpdateChatMessage,
