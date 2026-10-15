@@ -37,11 +37,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     };
 
     /**
-     * How often, in milliseconds, to update timestamps.
-     */
-    static UPDATE_TIMESTAMP_FREQUENCY = 1000 * 15;
-
-    /**
      * A references to the Messages collection that the chat pins log displays.
      */
     // @ts-expect-error Just ignore this
@@ -169,7 +164,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         await super._onFirstRender(context, options);
 
         this.#matchCoreLogClasses();
-        setInterval(this.updateTimestamps.bind(this), ChatPinsLogV2.UPDATE_TIMESTAMP_FREQUENCY);
 
         await this.renderBatch(CONFIG.ChatMessage.batchSize);
         await this.scrollBottom({ waitImages: true });
@@ -354,21 +348,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 }
             }
             await this.#postOne(message, { before: nextMessage?.id });
-        }
-    }
-
-    updateTimestamps(): void {
-        const messages = document.querySelectorAll("#chat-pins .chat-message[data-message-id]");
-
-        if (!messages) return;
-
-        for (const li of messages) {
-            const message = game.messages.get((li as HTMLElement).dataset.messageId ?? "");
-            if (!message?.timestamp) return;
-            const stamp = li.querySelector(".message-timestamp");
-            if (stamp) {
-                stamp.textContent = foundry.utils.timeSince(message.timestamp as unknown as string);
-            }
         }
     }
 
