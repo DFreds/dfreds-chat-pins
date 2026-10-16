@@ -204,13 +204,12 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         super._attachPartListeners(partId, element, options);
         switch (partId) {
             case "log":
-                this._attachLogListeners(element, options);
+                this.#attachLogListeners(element, options);
                 break;
         }
     }
 
-    _attachLogListeners(element: HTMLElement, _options: HandlebarsRenderOptions): void {
-        // @ts-expect-error complaining about type
+    #attachLogListeners(element: HTMLElement, _options: HandlebarsRenderOptions): void {
         element.addEventListener("scroll", this.#onScrollLog.bind(this), {
             passive: true,
         });
@@ -238,7 +237,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         else await thisApp.deleteMessage(messageId ?? "");
     }
 
-    async #onScrollLog(event?: UIEvent): Promise<void> {
+    async #onScrollLog(event?: Event): Promise<void> {
         if (!this.rendered) return;
         const log =
             (event?.currentTarget as HTMLElement) ?? (this.element.querySelector(".chat-scroll") as HTMLElement);
