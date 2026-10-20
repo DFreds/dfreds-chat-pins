@@ -387,7 +387,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         } else {
             // Otherwise, append the message to the bottom of the log
             log.append(html);
-            if (this.isAtBottom || message.author?._id === game.user._id) {
+            if (this.isAtBottom || message.isAuthor) {
                 this.scrollBottom({ waitImages: true });
             }
         }
