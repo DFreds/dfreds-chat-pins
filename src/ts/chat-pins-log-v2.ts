@@ -220,12 +220,11 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         target.classList.toggle("expanded");
     }
 
-    static async #onDeleteMessage(event: Event): Promise<void> {
+    static async #onDeleteMessage(event: Event, target: HTMLElement): Promise<void> {
         const thisApp = this as unknown as ChatPinsLogV2;
 
         event.preventDefault();
-        const target = event.target as HTMLElement;
-        const { messageId } = (target.closest("[data-message-id]") as HTMLElement)?.dataset ?? {};
+        const { messageId } = target.closest<HTMLElement>("[data-message-id]")?.dataset ?? {};
         const message = game.messages.get(messageId ?? "");
         if (message) await message.delete();
         else await thisApp.deleteMessage(messageId ?? "");
