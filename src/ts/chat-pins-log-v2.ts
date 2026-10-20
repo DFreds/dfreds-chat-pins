@@ -272,16 +272,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         );
     }
 
-    async postOne(message: ChatMessage, options = {}): Promise<void> {
-        if (!message.visible) return;
-        return this.#renderingQueue.add(
-            // @ts-expect-error Just ignore this
-            this.#postOne.bind(this),
-            message,
-            options,
-        );
-    }
-
     async renderBatch(size: number): Promise<void> {
         if (this.#renderingBatch) return;
         this.#renderingBatch = true;
@@ -303,9 +293,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     async scrollBottom({
         waitImages = false,
     }: {
-        popout?: boolean;
         waitImages?: boolean;
-        scrollOptions?: object;
     } = {}): Promise<void> {
         if (!this.rendered) return;
         const scroll = this.element.querySelector(".chat-scroll");
