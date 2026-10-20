@@ -39,14 +39,8 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     /**
      * A references to the Messages collection that the chat pins log displays.
      */
-    // @ts-expect-error Just ignore this
-    get collection(): foundry.documents.collections.ChatMessages {
-        const pinnedMessages = game.messages
-            .filter((message: ChatMessage) => this.#chatPins.isPinned(message))
-            .map((message: ChatMessage) => message.toObject());
-
-        // @ts-expect-error Just ignore this
-        return new foundry.documents.collections.ChatMessages(pinnedMessages);
+    get collection(): ChatMessage[] {
+        return game.messages.filter((message: ChatMessage) => this.#chatPins.isPinned(message));
     }
 
     /**
@@ -98,7 +92,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             return;
         }
 
-        const messages = this.collection.contents;
+        const messages = this.collection;
         const log = this.element.querySelector(".chat-log");
 
         // Get the index of the last rendered chat message
@@ -337,7 +331,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             await this.#rerenderMessage(message, li as HTMLElement);
         } else {
             // A previously invisible message has become visible to this user.
-            const messages = this.collection.contents;
+            const messages = this.collection;
             const messageIndex = messages.findIndex((m: ChatMessage) => m.id === message.id);
             let nextMessage;
             for (let i = messageIndex + 1; i < messages.length; i++) {
