@@ -17,7 +17,7 @@
             "None": "Nenhum",
 
             "PinPermissionName": "Permissão para Fixar",
-            "PinPermissionHint": "Define o nível mínimo necessário para fixar ou desafixar mensagens. A fixação é realizada através de um Mestre conectado, então usuários com este nível podem fixar qualquer mensagem, independentemente de quem a possui."
+            "PinPermissionHint": "Define o nível mínimo necessário para fixar ou desafixar mensagens. Usuários com este nível podem fixar as mensagens que possuem. Com o socketlib instalado, também podem fixar mensagens de outros usuários enquanto um Mestre estiver conectado."
         }
     }
 }
