@@ -21,6 +21,11 @@
                 "id": "socketlib",
                 "type": "module",
                 "reason": "Allows any user to pin any message by routing the request through a connected GM. Without it, users can only pin messages they own."
+            },
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "reason": "Lets this module and other modules change the same core Foundry functions without conflicts. Without it, a built-in fallback is used."
             }
         ]
     },
