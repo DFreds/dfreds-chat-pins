@@ -1,5 +1,5 @@
 import { ChatPinsLogV2 } from "./chat-pins-log-v2.ts";
-import { MODULE_ID, PINNED_FLAG } from "./constants.ts";
+import { FLUSH_OPTION, MODULE_ID, PINNED_FLAG } from "./constants.ts";
 import { Settings } from "./settings.ts";
 import { getSockets } from "./sockets/sockets.ts";
 import { error } from "./logger.ts";
@@ -157,7 +157,7 @@ class ChatPins {
                         .map((message: ChatMessage) => message.id);
 
                     try {
-                        await ChatMessage.deleteDocuments(notPinnedIds);
+                        await ChatMessage.deleteDocuments(notPinnedIds, { [MODULE_ID]: { [FLUSH_OPTION]: true } });
                     } catch (e) {
                         error(`Failed to delete messages: ${e}`);
                     }

@@ -7,3 +7,9 @@ export const MODULE_ID = moduleData.id;
  * it.
  */
 export const PINNED_FLAG = "pinned";
+
+/**
+ * The option, passed on the delete operation of a pins-only flush, that tells
+ * every client to rebuild its chat log afterward.
+ */
+export const FLUSH_OPTION = "flush";
