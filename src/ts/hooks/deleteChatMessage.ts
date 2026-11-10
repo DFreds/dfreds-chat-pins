@@ -5,9 +5,14 @@ import { Listener } from "./index.ts";
 const rebuildCoreChatLog = foundry.utils.debounce(async () => {
     if (!ui.chat.rendered) return;
 
+    const logElements = [ui.chat.element, ui.chat.popout?.rendered ? ui.chat.popout.element : null];
     const remainingRows = () =>
-        ui.chat.element.querySelectorAll<HTMLElement>(".message[data-message-id]:not(.deleting)");
-    const ids = new Set(Array.from(remainingRows(), (row) => row.dataset.messageId ?? ""));
+        logElements.flatMap((element) =>
+            element
+                ? Array.from(element.querySelectorAll<HTMLElement>(".message[data-message-id]:not(.deleting)"))
+                : [],
+        );
+    const ids = new Set(remainingRows().map((row) => row.dataset.messageId ?? ""));
     await Promise.all(Array.from(ids, (id) => ui.chat.deleteMessage(id, { deleteAll: true })));
     for (const duplicateRow of remainingRows()) duplicateRow.remove();
 
