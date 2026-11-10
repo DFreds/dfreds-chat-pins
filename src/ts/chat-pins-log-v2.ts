@@ -138,20 +138,33 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
                 label: "ChatPins.JumpToPin",
                 icon: '<i class="fas fa-bullseye"></i>',
                 visible: () => true,
-                onClick: (_event: PointerEvent, target: HTMLElement) => {
+                onClick: async (_event: PointerEvent, target: HTMLElement) => {
                     const messageId = target.dataset.messageId;
-                    const messages = document.querySelectorAll(
-                        `#chat .chat-message[data-message-id="${messageId}"], #chat-popout .chat-message[data-message-id="${messageId}"]`,
-                    );
+                    if (!messageId) return;
 
-                    for (const message of messages) {
-                        message.scrollIntoView({ behavior: "smooth" });
+                    const coreLogs = [ui.chat, ui.chat.popout].filter((log) => log?.rendered);
+                    for (const log of coreLogs) {
+                        const row = await this.#findOrLoadMessageRow(log!, messageId);
+                        row?.scrollIntoView({ behavior: "smooth" });
                     }
                 },
             },
             // @ts-expect-error Not the best, but easiest way to get options from foundry
             ...ChatLog.prototype._getEntryContextOptions.call(this),
         ];
+    }
+
+    async #findOrLoadMessageRow(log: InstanceType<typeof ChatLog>, messageId: string): Promise<HTMLElement | null> {
+        const selector = `.chat-message[data-message-id="${messageId}"]`;
+        const batchSize = CONFIG.ChatMessage.batchSize;
+        const maxBatches = Math.ceil(game.messages.size / batchSize);
+
+        let row = log.element.querySelector<HTMLElement>(selector);
+        for (let batch = 0; !row && batch < maxBatches; batch++) {
+            await log.renderBatch(batchSize);
+            row = log.element.querySelector<HTMLElement>(selector);
+        }
+        return row;
     }
 
     protected override async _onFirstRender(context: object, options: HandlebarsRenderOptions): Promise<void> {
