@@ -1,5 +1,4 @@
 import { ChatPins } from "../chat-pins.ts";
-import type { ChatLog } from "@client/applications/sidebar/tabs/_module.mjs";
 import { Listener } from "./index.ts";
 
 /**
@@ -7,11 +6,11 @@ import { Listener } from "./index.ts";
  */
 const RenderChatInput: Listener = {
     listen(): void {
-        Hooks.on("renderChatInput", (chatLog, _data, _metadata) => {
-            const chatLogTyped = chatLog as ChatLog;
+        Hooks.on("renderChatInput", (_chatLog, elements, _metadata) => {
+            const chatControls = (elements as Record<string, HTMLElement>)["#chat-controls"];
+            if (!chatControls) return;
 
-            const chatPins = new ChatPins();
-            chatPins.addPinButton(chatLogTyped.element);
+            new ChatPins().addPinButton(chatControls);
         });
     },
 };

@@ -8,12 +8,12 @@ const { DialogV2 } = foundry.applications.api;
 
 class ChatPins {
     /**
-     * Adds the pin button to the chat sidebar element
+     * Adds the pin button to the chat controls
      *
-     * @param chatHtml - the html for the chat input
+     * @param chatControls - the chat controls element, wherever core has placed it
      */
-    addPinButton(chatHtml: HTMLElement): void {
-        if (chatHtml.querySelector('button[data-action="chat-pins"]')) return;
+    addPinButton(chatControls: HTMLElement): void {
+        if (chatControls.querySelector('button[data-action="chat-pins"]')) return;
 
         const pinButton = document.createElement("button");
         pinButton.type = "button";
@@ -25,11 +25,11 @@ class ChatPins {
             (foundry.applications.instances.get("chat-pins") ?? new ChatPinsLogV2()).render(true),
         );
 
-        let controlButtons = chatHtml.querySelector("#chat-controls .control-buttons");
+        let controlButtons = chatControls.querySelector(".control-buttons");
         if (!controlButtons) {
             controlButtons = document.createElement("div");
             controlButtons.className = "control-buttons";
-            chatHtml.querySelector("#chat-controls")?.append(controlButtons);
+            chatControls.append(controlButtons);
         }
         controlButtons.prepend(pinButton);
     }
