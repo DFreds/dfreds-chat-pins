@@ -320,6 +320,15 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             // A previously invisible message has become visible to this user.
             const messages = this.collection;
             const messageIndex = messages.findIndex((m: ChatMessage) => m.id === message.id);
+            const oldestLoadedIndex = messages.findIndex((m: ChatMessage) => m.id === this.#lastId);
+            const isOlderThanLoaded = oldestLoadedIndex > -1 && messageIndex < oldestLoadedIndex;
+            if (isOlderThanLoaded) {
+                const isNextToLoaded = !messages
+                    .slice(messageIndex + 1, oldestLoadedIndex)
+                    .some((m: ChatMessage) => m.visible);
+                if (!isNextToLoaded) return;
+                this.#lastId = message.id;
+            }
             let nextMessage;
             for (let i = messageIndex + 1; i < messages.length; i++) {
                 if (messages[i].visible) {
