@@ -113,7 +113,6 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
             try {
                 elements.push(await ChatPinsLogV2.renderMessage(message));
             } catch (err) {
-                // @ts-expect-error Hooks.onError is not typed
                 Hooks.onError("ChatPinsLogV2##doRenderBatch", err, {
                     msg: `Chat message ${message.id} failed to render`,
                     log: "error",
@@ -276,12 +275,7 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
     }
 
     async deleteMessage(messageId: string, options: object = {}): Promise<void> {
-        return this.#renderingQueue.add(
-            // @ts-expect-error Just ignore this
-            this.#deleteMessage.bind(this),
-            messageId,
-            options,
-        );
+        return this.#renderingQueue.add(this.#deleteMessage.bind(this), messageId, options);
     }
 
     async renderBatch(size: number): Promise<void> {
@@ -311,18 +305,13 @@ class ChatPinsLogV2 extends HandlebarsApplicationMixin(
         const scroll = this.element.querySelector(".chat-scroll");
         if (!scroll) return;
         if (waitImages) {
-            // @ts-expect-error Just ignore this
             await ChatPinsLogV2.waitForImages(scroll as HTMLElement);
         }
         scroll.scrollTop = Number.MAX_SAFE_INTEGER;
     }
 
     async updateMessage(message: ChatMessage): Promise<void> {
-        return this.#renderingQueue.add(
-            // @ts-expect-error Just ignore this
-            this.#updateMessage.bind(this),
-            message,
-        );
+        return this.#renderingQueue.add(this.#updateMessage.bind(this), message);
     }
 
     async #updateMessage(message: ChatMessage): Promise<void> {
